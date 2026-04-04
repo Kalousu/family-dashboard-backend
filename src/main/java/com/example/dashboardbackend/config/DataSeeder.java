@@ -14,11 +14,18 @@ public class DataSeeder {
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository) {
         return args -> {
-            // Add sample products to the database, if empty
             if(userRepository.count() == 0) {
-                userRepository.save(new User(null, "User1", "Passwort1", "EMAIL", UserRole.CROOK,
-                        new Family(null, "BRUHF")
-                ));
+                User user1 = new User();
+                user1.setName("User1");
+                user1.setPassword("Passwort1");
+                user1.setEmail("user1@example.com");
+                user1.setUserRole(UserRole.CROOK);
+                
+                Family family1 = new Family();
+                family1.setFamilyName("BRUHF");
+                user1.setFamily(family1);
+                
+                userRepository.save(user1);
             }
         };
     }

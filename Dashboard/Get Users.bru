@@ -1,0 +1,20 @@
+meta {
+  name: Get Users
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{apiUrl}}/users
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: nivek
+  password: kevin
+}
+
+settings {
+  encodeUrl: true
+}
