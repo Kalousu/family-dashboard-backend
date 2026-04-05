@@ -17,7 +17,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated());
+        http.authorizeHttpRequests((requests) -> requests
+            .requestMatchers("/api/weather/**").permitAll()
+            .anyRequest().authenticated());
         http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
         return http.build();
