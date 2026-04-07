@@ -23,7 +23,9 @@ public class UserService {
                     user.getId(),
                     user.getName(),
                     user.getUserRole(),
-                    user.getFamily()
+                    user.getFamily(),
+                    user.getUserPfp(),
+                    user.getPfpColour()
             ));
         });
 
