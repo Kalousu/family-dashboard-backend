@@ -9,5 +9,6 @@ public record GeoLocation(
     double latitude,
     double longitude,
     String country,
-    String timezone
+    String timezone,
+    String admin1 // Bundesland in open meteo
 ) {}

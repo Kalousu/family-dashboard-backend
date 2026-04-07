@@ -11,18 +11,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 public class WeatherService {
   private final RestClient restClient = RestClient.create();
 
-  public WeatherResponse getWeatherByCity(String city) {
-    GeoLocation location = resolveCity(city);
-
+  public WeatherResponse getWeather(double latitude, double longitude, String timezone) {
     String url = "https://api.open-meteo.com/v1/forecast" +
-        "?latitude=" + location.latitude() +
-        "&longitude=" + location.longitude() +
+        "?latitude=" + latitude +
+        "&longitude=" + longitude +
         "&current=temperature_2m,wind_speed_10m,weather_code" +
-        "&timezone=" + location.timezone();
+        "&timezone=" + timezone;
 
     return restClient.get()
                      .uri(url)
@@ -30,20 +30,15 @@ public class WeatherService {
                      .body(WeatherResponse.class);
   }
 
-  private GeoLocation resolveCity(String city) {
+  public List<GeoLocation> searchCities(String city) {
     GeoLocationResponse geo = restClient.get()
                                         .uri("https://geocoding-api.open-meteo.com/v1/search" +
-                                               "?name={city}&count=1&language=de&format=json", city)
+                                                 "?name={city}&count=5&language=de&format=json", city)
                                         .retrieve()
                                         .body(GeoLocationResponse.class);
 
-    if (geo == null || geo.results() == null || geo.results().isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                        "Stadt nicht gefunden: " + city);
-    }
-
-    return geo.results().get(0);
+    if (geo == null || geo.results() == null) return List.of();
+    return geo.results();
   }
-
 
 }
