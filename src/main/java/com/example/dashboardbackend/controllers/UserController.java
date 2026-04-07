@@ -22,4 +22,6 @@ public class UserController {
     public ResponseEntity<List<UserResponse>> getUsers(){
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
+
+
 }
