@@ -1,0 +1,23 @@
+meta {
+  name: Register in Application
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{apiUrl}}/auth/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Kevin",
+    "password": "123",
+    "email": "123@bozo.furz"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
