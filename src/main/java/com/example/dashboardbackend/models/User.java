@@ -1,6 +1,7 @@
 package com.example.dashboardbackend.models;
 
 import com.example.dashboardbackend.models.enums.UserRole;
+import com.example.dashboardbackend.models.enums.UserPfp;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,4 +37,11 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "family_id")
     private Family family;
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    UserPfp userPfp;
+
+    @Column(nullable = true)
+    private String pfpColour;
 }
