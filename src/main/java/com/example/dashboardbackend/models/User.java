@@ -39,7 +39,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     UserRole userRole;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "family_id")
     private Family family;
 

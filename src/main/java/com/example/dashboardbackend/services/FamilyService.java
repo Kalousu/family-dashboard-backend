@@ -16,20 +16,20 @@ public class FamilyService {
     FamilyRepository familyRepository;
     @Autowired
     DashboardRepository dashboardRepository;
+    @Autowired
+    private WidgetService widgetService;
 
     public DashboardResponse getDashboardByFamilyId(Long familyId){
         Dashboard dashboard = dashboardRepository.findById(familyId).orElseThrow(()-> new RuntimeException("No dashboard found"));
 
-        List<WidgetResponse> widgetResponseList = dashboard.getWidgetItems().stream().map(widgetItem -> {
-            return new WidgetResponse(
-                    widgetItem.getId(),
-                    widgetItem.getType(),
-                    widgetItem.getWidgetConfig(),
-                    widgetItem.getWidgetPosition(),
-                    widgetItem.getCreatedAt(),
-                    null
-            );
-        }).toList();
+        List<WidgetResponse> widgetResponseList = dashboard.getWidgetItems().stream().map(widgetItem -> new WidgetResponse(
+                widgetItem.getId(),
+                widgetItem.getType(),
+                widgetItem.getWidgetConfig(),
+                widgetItem.getWidgetPosition(),
+                widgetItem.getCreatedAt(),
+                widgetService.getWidgetData(widgetItem.getId(), widgetItem.getType(), widgetItem.getWidgetConfig())
+        )).toList();
 
         return new DashboardResponse(
                 dashboard.getId(),
