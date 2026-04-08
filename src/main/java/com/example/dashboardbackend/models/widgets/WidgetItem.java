@@ -2,12 +2,16 @@ package com.example.dashboardbackend.models.widgets;
 
 import com.example.dashboardbackend.models.Dashboard;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 public class WidgetItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
