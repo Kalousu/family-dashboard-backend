@@ -5,17 +5,9 @@ meta {
 }
 
 get {
-  url: {{apiUrl}}/users
+  url: {{apiUrl}}/weather/search?
   body: json
-  auth: bearer
-}
-
-headers {
-  Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJLZXZpbiIsImlhdCI6MTc3NTQ3NzgzOCwiZXhwIjoxNzc1NTY0MjM4fQ.b4rFYLawk8Lf3xAkJ_5oA-ddyChMrZeDadCqMdSaCV8
-}
-
-auth:bearer {
-  token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJLZXZpbiIsImlhdCI6MTc3NTQ3OTA0NiwiZXhwIjoxNzc1NTY1NDQ2fQ.S0OGROlUOM6xrJA4Ezrcg0okd1UGF7sjBu17m43Z_ig
+  auth: none
 }
 
 settings {
