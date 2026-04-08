@@ -13,12 +13,12 @@ public class WidgetItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne  // ← FEHLT!
-    @JoinColumn(name = "dashboard_id")  // ← FEHLT!
-    private Dashboard dashboard;  // ← FEHLT!
+    @ManyToOne
+    @JoinColumn(name = "dashboard_id")
+    private Dashboard dashboard;
 
     @Column(nullable = false)
-    private String type;  // ← FEHLT! ("weather", "todo", etc.)
+    private String type;
 
     @Column(columnDefinition = "jsonb")
     @JdbcTypeCode(SqlTypes.JSON)
