@@ -1,5 +1,6 @@
 package com.example.dashboardbackend.models;
 
+import com.example.dashboardbackend.models.widgets.WidgetItem;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,10 +20,9 @@ public class Dashboard {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "users_id")
-    private User user;
+    @JoinColumn(name = "family_id")
+    private Family family;
 
-    @Column
     List<WidgetItem> widgetItems;
 
 }
