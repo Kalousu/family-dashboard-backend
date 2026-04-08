@@ -1,5 +1,6 @@
 package com.example.dashboardbackend.models.widgets;
 
+import com.example.dashboardbackend.models.Dashboard;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -12,8 +13,12 @@ public class WidgetItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne  // ← FEHLT!
+    @JoinColumn(name = "dashboard_id")  // ← FEHLT!
+    private Dashboard dashboard;  // ← FEHLT!
+
     @Column(nullable = false)
-    private String title;
+    private String type;  // ← FEHLT! ("weather", "todo", etc.)
 
     @Column(columnDefinition = "jsonb")
     @JdbcTypeCode(SqlTypes.JSON)

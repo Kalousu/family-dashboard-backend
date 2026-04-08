@@ -23,6 +23,7 @@ public class Dashboard {
     @JoinColumn(name = "family_id")
     private Family family;
 
+    @OneToMany(mappedBy = "dashboard", cascade = CascadeType.ALL)
     List<WidgetItem> widgetItems;
 
 }
