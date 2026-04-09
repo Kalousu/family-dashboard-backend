@@ -20,7 +20,7 @@ public class FamilyService {
     private WidgetService widgetService;
 
     public DashboardResponse getDashboardByFamilyId(Long familyId){
-        Dashboard dashboard = dashboardRepository.findById(familyId).orElseThrow(()-> new RuntimeException("No dashboard found"));
+        Dashboard dashboard = dashboardRepository.findByFamily_Id(familyId).orElseThrow(()-> new RuntimeException("No dashboard found"));
 
         List<WidgetResponse> widgetResponseList = dashboard.getWidgetItems().stream().map(widgetItem -> new WidgetResponse(
                 widgetItem.getId(),

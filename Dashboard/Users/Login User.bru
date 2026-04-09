@@ -1,0 +1,15 @@
+meta {
+  name: Login User
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{apiUrl}}/auth/authenticate
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

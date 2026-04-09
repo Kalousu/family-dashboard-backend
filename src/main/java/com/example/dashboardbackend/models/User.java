@@ -39,7 +39,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     UserRole userRole;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "family_id")
     private Family family;
 
