@@ -1,0 +1,19 @@
+meta {
+  name: Get Dashboard Based On Family Id
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{apiUrl}}/family/:familyId/dashboard
+  body: none
+  auth: none
+}
+
+params:path {
+  familyId: 1
+}
+
+settings {
+  encodeUrl: true
+}

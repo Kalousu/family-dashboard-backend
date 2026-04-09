@@ -4,6 +4,7 @@ import com.example.dashboardbackend.dtos.auth.AuthRequest;
 import com.example.dashboardbackend.dtos.auth.AuthResponse;
 import com.example.dashboardbackend.dtos.auth.RegisterRequest;
 import com.example.dashboardbackend.models.enums.UserRole;
+import com.example.dashboardbackend.repositories.FamilyRepository;
 import com.example.dashboardbackend.repositories.UserRepository;
 import com.example.dashboardbackend.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class AuthenticationService {
     @Autowired
     UserRepository userRepository;
     @Autowired
+    FamilyRepository familyRepository;
+    @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
     JwtUtils jwtUtils;
@@ -31,7 +34,8 @@ public class AuthenticationService {
         var user = new User();
         user.setName(request.name());
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.setUserRole(UserRole.CROOK);
+        user.setUserRole(UserRole.USER);
+        user.setFamily(familyRepository.findById(request.familyId()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
         userRepository.save(user);
         String jwtToken = jwtUtils.generateToken(user);
         return new AuthResponse(jwtToken);
