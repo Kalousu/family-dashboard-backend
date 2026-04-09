@@ -44,9 +44,10 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests((requests) -> requests.requestMatchers(
-                "/api/**"
-                ).permitAll()
+            .authorizeHttpRequests((requests) -> requests
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/users").permitAll()
+                .requestMatchers("/api/**").authenticated()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationProvider(authenticationProvider())

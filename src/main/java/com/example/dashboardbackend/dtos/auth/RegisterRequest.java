@@ -4,5 +4,7 @@ public record RegisterRequest(
         String name,
         String password,
         String email,
-        Long familyId
+        Long familyId,
+        String userPfp,
+        String pfpColour
 ) {}

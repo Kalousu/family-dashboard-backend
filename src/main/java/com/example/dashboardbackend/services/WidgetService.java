@@ -54,4 +54,47 @@ public class WidgetService {
 
         widgetItemRepository.save(widget);
     }
+
+    public WidgetResponse addWidget(Long familyId, Map<String, Object> widgetData) {
+        Dashboard dashboard = dashboardRepository.findByFamily_Id(familyId)
+                .orElseThrow(() -> new RuntimeException("Dashboard not found for family"));
+
+        WidgetItem widget = new WidgetItem();
+        widget.setType((String) widgetData.get("type"));
+        widget.setDashboard(dashboard);
+        
+        @SuppressWarnings("unchecked")
+        Map<String, String> position = (Map<String, String>) widgetData.get("position");
+        widget.setWidgetPosition(new com.example.dashboardbackend.models.widgets.WidgetPosition(
+            position.get("col"),
+            position.get("row"),
+            position.get("colSpan"),
+            position.get("rowSpan")
+        ));
+        
+        widget.setWidgetConfig(new WidgetConfig("", "", Map.of()));
+        widget.setCreatedAt(LocalDateTime.now());
+
+        WidgetItem savedWidget = widgetItemRepository.save(widget);
+
+        return new WidgetResponse(
+            savedWidget.getId(),
+            savedWidget.getType(),
+            savedWidget.getWidgetConfig(),
+            savedWidget.getWidgetPosition(),
+            savedWidget.getCreatedAt(),
+            null
+        );
+    }
+
+    public void removeWidget(Long familyId, Long widgetId) {
+        WidgetItem widget = widgetItemRepository.findById(widgetId)
+                .orElseThrow(() -> new RuntimeException("Widget not found"));
+        
+        if (!widget.getDashboard().getFamily().getId().equals(familyId)) {
+            throw new RuntimeException("Widget does not belong to this family");
+        }
+
+        widgetItemRepository.delete(widget);
+    }
 }

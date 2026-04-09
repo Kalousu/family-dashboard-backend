@@ -22,14 +22,23 @@ public class FamilyService {
     public DashboardResponse getDashboardByFamilyId(Long familyId){
         Dashboard dashboard = dashboardRepository.findByFamily_Id(familyId).orElseThrow(()-> new RuntimeException("No dashboard found"));
 
-        List<WidgetResponse> widgetResponseList = dashboard.getWidgetItems().stream().map(widgetItem -> new WidgetResponse(
+        List<WidgetResponse> widgetResponseList = dashboard.getWidgetItems().stream().map(widgetItem -> {
+            Object data = null;
+            if (widgetItem.getWidgetConfig() != null && 
+                widgetItem.getWidgetConfig().settings() != null && 
+                !widgetItem.getWidgetConfig().settings().isEmpty()) {
+                data = widgetService.getWidgetData(widgetItem.getId(), widgetItem.getType(), widgetItem.getWidgetConfig());
+            }
+            
+            return new WidgetResponse(
                 widgetItem.getId(),
                 widgetItem.getType(),
                 widgetItem.getWidgetConfig(),
                 widgetItem.getWidgetPosition(),
                 widgetItem.getCreatedAt(),
-                widgetService.getWidgetData(widgetItem.getId(), widgetItem.getType(), widgetItem.getWidgetConfig())
-        )).toList();
+                data
+            );
+        }).toList();
 
         return new DashboardResponse(
                 dashboard.getId(),

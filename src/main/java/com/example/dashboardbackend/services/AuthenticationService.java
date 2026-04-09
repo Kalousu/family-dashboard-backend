@@ -33,9 +33,22 @@ public class AuthenticationService {
     public AuthResponse register(RegisterRequest request){
         var user = new User();
         user.setName(request.name());
+        user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setUserRole(UserRole.USER);
         user.setFamily(familyRepository.findById(request.familyId()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        
+        if (request.userPfp() != null) {
+            try {
+                user.setUserPfp(com.example.dashboardbackend.models.enums.UserPfp.valueOf(request.userPfp().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                user.setUserPfp(com.example.dashboardbackend.models.enums.UserPfp.USER);
+            }
+        }
+        if (request.pfpColour() != null) {
+            user.setPfpColour(request.pfpColour());
+        }
+        
         userRepository.save(user);
         String jwtToken = jwtUtils.generateToken(user);
         return new AuthResponse(jwtToken);
