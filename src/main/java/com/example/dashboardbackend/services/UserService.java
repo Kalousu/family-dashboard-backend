@@ -4,6 +4,8 @@ import com.example.dashboardbackend.dtos.UserResponse;
 import com.example.dashboardbackend.models.User;
 import com.example.dashboardbackend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,12 +25,25 @@ public class UserService {
                     user.getId(),
                     user.getName(),
                     user.getUserRole(),
-                    user.getFamily(),
+                    user.getFamily().getId(),
                     user.getUserPfp(),
                     user.getPfpColour()
             ));
         });
 
         return users;
+    }
+
+    public UserResponse getUserByName(String name){
+        User user = userRepository.findByName(name).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getUserRole(),
+                user.getFamily().getId(),
+                user.getUserPfp(),
+                user.getPfpColour()
+        );
     }
 }
