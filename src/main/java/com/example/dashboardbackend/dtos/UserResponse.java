@@ -8,7 +8,7 @@ public record UserResponse(
         Long id,
         String name,
         UserRole userRole,
-        Family family,
+        Long familyId,
         UserPfp userPfp,
         String pfpColour
 ) {

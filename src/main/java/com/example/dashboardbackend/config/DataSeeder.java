@@ -6,6 +6,7 @@ import com.example.dashboardbackend.models.User;
 import com.example.dashboardbackend.models.enums.UserRole;
 import com.example.dashboardbackend.models.widgets.WidgetConfig;
 import com.example.dashboardbackend.models.widgets.WidgetItem;
+import com.example.dashboardbackend.models.widgets.WidgetPosition;
 import com.example.dashboardbackend.repositories.DashboardRepository;
 import com.example.dashboardbackend.repositories.FamilyRepository;
 import com.example.dashboardbackend.repositories.UserRepository;
@@ -30,7 +31,7 @@ public class DataSeeder {
                 user1.setName("User1");
                 user1.setPassword("Passwort1");
                 user1.setEmail("user1@example.com");
-                user1.setUserRole(UserRole.CROOK);
+                user1.setUserRole(UserRole.USER);
 
                 Dashboard dashboard1 = new Dashboard();
 
@@ -45,8 +46,11 @@ public class DataSeeder {
                 weatherSettings.put("longitude", 8.46694);
                 weatherSettings.put("timezone", "Europe/Berlin");
 
+                WidgetPosition weatherWidgetPosition = new WidgetPosition("0", "0", "2", "2");
+                weatherWidget.setWidgetPosition(weatherWidgetPosition);
+
                 weatherWidget.setWidgetConfig(new WidgetConfig(
-                        "Wetter Mannheim",
+                        "Wetter App",
                         "blue",
                         weatherSettings
                 ));
