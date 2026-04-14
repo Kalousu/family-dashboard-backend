@@ -37,7 +37,7 @@ public class User implements UserDetails {
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    UserRole userRole;
+    private UserRole userRole;
 
     @ManyToOne
     @JoinColumn(name = "family_id")
@@ -45,10 +45,13 @@ public class User implements UserDetails {
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    UserPfp userPfp;
+    private UserPfp pfpIcon;
+
+    @Column
+    private String pfpUrl;
 
     @Column(nullable = true)
-    private String pfpColour;
+    private String color;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
