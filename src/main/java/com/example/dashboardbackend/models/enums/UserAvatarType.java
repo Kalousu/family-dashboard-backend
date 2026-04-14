@@ -4,14 +4,7 @@
 
 package com.example.dashboardbackend.models.enums;
 
-public enum UserPfp {
-    USER,
-    CAT,
-    DOG,
-    FLOWER,
-    STAR,
-    HEART,
-    SUN,
-    MUSIC,
-    GAMEPAD
+public enum UserAvatarType {
+    URL,
+    ICON
 }

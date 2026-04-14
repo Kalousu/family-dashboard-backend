@@ -1,7 +1,7 @@
 package com.example.dashboardbackend.models;
 
 import com.example.dashboardbackend.models.enums.UserRole;
-import com.example.dashboardbackend.models.enums.UserPfp;
+import com.example.dashboardbackend.models.enums.UserAvatarType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.annotation.processing.Generated;
 import java.util.Collection;
 import java.util.List;
 
@@ -43,14 +42,13 @@ public class User implements UserDetails {
     @JoinColumn(name = "family_id")
     private Family family;
 
-    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    private UserPfp pfpIcon;
+    private UserAvatarType avatarType;
 
     @Column
-    private String pfpUrl;
+    private String avatar;
 
-    @Column(nullable = true)
+    @Column
     private String color;
 
     @Override

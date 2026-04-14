@@ -27,7 +27,8 @@ public class UserService {
                     user.getName(),
                     user.getUserRole(),
                     user.getFamily().getId(),
-                    user.getPfpIcon(),
+                    user.getAvatar(),
+                    user.getAvatarType(),
                     user.getColor()
             ));
         });
@@ -43,7 +44,8 @@ public class UserService {
                 user.getName(),
                 user.getUserRole(),
                 user.getFamily().getId(),
-                user.getPfpIcon(),
+                user.getAvatar(),
+                user.getAvatarType(),
                 user.getColor()
         );
     }

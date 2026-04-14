@@ -6,7 +6,7 @@ meta {
 
 post {
   url: {{apiUrl}}/auth/register
-  body: json
+  body: multipartForm
   auth: none
 }
 
@@ -17,6 +17,11 @@ body:json {
     "email": "horst@gmail.com",
     "familyId": 1
   }
+}
+
+body:multipart-form {
+  avatar: @file(/Users/I750480/Downloads/Dekter.jpeg) @contentType(File)
+  data: @file(/Users/I750480/Documents/was/data.json)
 }
 
 settings {
