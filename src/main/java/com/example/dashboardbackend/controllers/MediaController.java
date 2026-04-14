@@ -18,7 +18,7 @@ public class MediaController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> uploadImage(
             @RequestPart("file") MultipartFile file
-    ){
+    ) {
         String key = mediaService.uploadFile(file);
         return ResponseEntity.ok(key);
     }

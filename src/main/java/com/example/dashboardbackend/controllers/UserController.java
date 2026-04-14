@@ -20,12 +20,12 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getUsers(){
+    public ResponseEntity<List<UserResponse>> getUsers() {
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> getMe(Authentication authentication){
+    public ResponseEntity<UserResponse> getMe(Authentication authentication) {
         return new ResponseEntity<>(userService.getUserByName(authentication.getName()), HttpStatus.OK);
     }
 

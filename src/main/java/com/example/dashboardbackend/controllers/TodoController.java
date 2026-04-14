@@ -21,7 +21,7 @@ public class TodoController {
     @GetMapping("/{widgetId}")
     public ResponseEntity<List<TodoItemResponse>> getTodos(
             @PathVariable Long widgetId
-    ){
+    ) {
         return new ResponseEntity<>(todoService.getTodosByWidgetId(widgetId), HttpStatus.OK);
     }
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.Getter;
 
 @Service
@@ -17,7 +18,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<UserResponse> getUsers(){
+    public List<UserResponse> getUsers() {
         List<UserResponse> users = new ArrayList<>();
 
         userRepository.findAll().stream().forEach(user -> {
@@ -34,7 +35,7 @@ public class UserService {
         return users;
     }
 
-    public UserResponse getUserByName(String name){
+    public UserResponse getUserByName(String name) {
         User user = userRepository.findByName(name).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return new UserResponse(

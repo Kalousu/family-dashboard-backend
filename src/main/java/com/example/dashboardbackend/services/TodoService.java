@@ -13,7 +13,7 @@ public class TodoService {
     @Autowired
     private TodoRepository todoRepository;
 
-    public List<TodoItemResponse> getTodosByWidgetId(Long widgetId){
+    public List<TodoItemResponse> getTodosByWidgetId(Long widgetId) {
         List<TodoItem> items = todoRepository.findTodoItemsByWidgetItem_Id(widgetId)
                 .orElseThrow(() -> new RuntimeException("Todo-Items for id " + widgetId + " not found"));
 

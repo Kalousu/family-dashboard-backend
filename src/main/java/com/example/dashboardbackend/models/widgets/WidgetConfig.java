@@ -6,4 +6,5 @@ public record WidgetConfig(
         String title,
         String color,
         Map<String, Object> settings
-) {}
+) {
+}

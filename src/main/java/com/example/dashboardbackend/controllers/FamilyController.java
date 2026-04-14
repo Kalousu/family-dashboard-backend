@@ -17,7 +17,7 @@ public class FamilyController {
     FamilyService familyService;
 
     @GetMapping("/{familyId}/dashboard")
-    public ResponseEntity<DashboardResponse> getDashboardForFamily(@PathVariable Long familyId){
+    public ResponseEntity<DashboardResponse> getDashboardForFamily(@PathVariable Long familyId) {
         return new ResponseEntity<>(familyService.getDashboardByFamilyId(familyId), HttpStatus.OK);
     }
 }

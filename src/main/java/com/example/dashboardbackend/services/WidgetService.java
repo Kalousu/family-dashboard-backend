@@ -24,14 +24,14 @@ public class WidgetService {
     @Autowired
     WidgetItemRepository widgetItemRepository;
 
-    public Object getWidgetData(Long widgetId, String type, WidgetConfig config){
-        return switch(type) {
+    public Object getWidgetData(Long widgetId, String type, WidgetConfig config) {
+        return switch (type) {
             case "weather" -> getWeatherData(config);
             default -> null;
         };
     }
 
-    private Object getWeatherData(WidgetConfig config){
+    private Object getWeatherData(WidgetConfig config) {
         Map<String, Object> settings = config.settings();
 
         double latitude = ((Number) settings.get("latitude")).doubleValue();

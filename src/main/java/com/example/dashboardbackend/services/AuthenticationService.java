@@ -30,7 +30,7 @@ public class AuthenticationService {
     @Autowired
     AuthenticationManager authenticationManager;
 
-    public AuthResponse register(RegisterRequest request){
+    public AuthResponse register(RegisterRequest request) {
         var user = new User();
         user.setName(request.name());
         user.setPassword(passwordEncoder.encode(request.password()));
@@ -41,9 +41,9 @@ public class AuthenticationService {
         return new AuthResponse(jwtToken);
     }
 
-    public AuthResponse authenticate(AuthRequest request){
+    public AuthResponse authenticate(AuthRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.name(), request.password()));
-        User user = userRepository.findByName(request.name()).orElseThrow(()-> new UsernameNotFoundException("Username not found"));
+        User user = userRepository.findByName(request.name()).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
         String jwtToken = jwtUtils.generateToken(user);
         return new AuthResponse(jwtToken);
     }

@@ -5,4 +5,5 @@ public record RegisterRequest(
         String password,
         String email,
         Long familyId
-) {}
+) {
+}

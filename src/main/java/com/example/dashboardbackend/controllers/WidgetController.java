@@ -19,7 +19,7 @@ public class WidgetController {
     @PostMapping
     public ResponseEntity<Object> createWidget(
             @RequestBody CreateWidgetRequest createWidgetRequest
-    ){
+    ) {
         widgetService.createWidget(createWidgetRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

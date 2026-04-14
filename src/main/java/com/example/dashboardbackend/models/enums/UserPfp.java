@@ -5,13 +5,13 @@
 package com.example.dashboardbackend.models.enums;
 
 public enum UserPfp {
-      USER,
-      CAT,
-      DOG,
-      FLOWER,
-      STAR,
-      HEART,
-      SUN,
-      MUSIC,
-      GAMEPAD
+    USER,
+    CAT,
+    DOG,
+    FLOWER,
+    STAR,
+    HEART,
+    SUN,
+    MUSIC,
+    GAMEPAD
 }

@@ -8,4 +8,5 @@ public record CreateWidgetRequest(
         String type,
         WidgetConfig widgetConfig,
         WidgetPosition widgetPosition
-) { }
+) {
+}

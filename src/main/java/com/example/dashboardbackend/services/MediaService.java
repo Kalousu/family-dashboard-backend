@@ -24,7 +24,7 @@ public class MediaService {
     @Value("${cloudflare.r2.bucket}")
     private String bucketName;
 
-    public String uploadFile(MultipartFile file){
+    public String uploadFile(MultipartFile file) {
 
         String fileName = Optional.ofNullable(file.getOriginalFilename())
                 .orElseThrow(() -> new UnsupportedMediaTypeException("Filename is missing"))
@@ -34,7 +34,7 @@ public class MediaService {
                 .orElseThrow(() -> new UnsupportedMediaTypeException("Content type is missing"));
 
         String ext = getFileExtension(fileName);
-        String folder = switch(ext){
+        String folder = switch (ext) {
             case "jpg", "jpeg", "png", "gif" -> "images";
             default -> throw new UnsupportedMediaTypeException("Extension of type " + contentType + " not supported");
         };

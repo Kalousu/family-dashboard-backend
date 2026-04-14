@@ -5,9 +5,19 @@ meta {
 }
 
 post {
-  url: {{apiUrl}}
-  body: none
+  url: {{apiUrl}}/media/upload
+  body: multipartForm
   auth: inherit
+}
+
+body:json {
+  {
+    
+  }
+}
+
+body:multipart-form {
+  file: @file(/Users/I750480/Downloads/Dekter.jpeg) @contentType(File)
 }
 
 settings {

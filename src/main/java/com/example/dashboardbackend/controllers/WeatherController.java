@@ -3,6 +3,7 @@
  */
 
 package com.example.dashboardbackend.controllers;
+
 import com.example.dashboardbackend.dtos.weather.GeoLocation;
 import com.example.dashboardbackend.dtos.weather.WeatherResponse;
 import com.example.dashboardbackend.services.WeatherService;
@@ -17,19 +18,19 @@ import java.util.List;
 @RequestMapping("/api/weather")
 
 public class WeatherController {
-  private final WeatherService weatherService;
+    private final WeatherService weatherService;
 
-  public WeatherController(WeatherService weatherService) {
-    this.weatherService = weatherService;
-  }
+    public WeatherController(WeatherService weatherService) {
+        this.weatherService = weatherService;
+    }
 
-  @GetMapping
-  public WeatherResponse getWeather(@RequestParam double latitude, @RequestParam double longitude, @RequestParam String timezone) {
-    return weatherService.getWeather(latitude, longitude, timezone);
-  }
+    @GetMapping
+    public WeatherResponse getWeather(@RequestParam double latitude, @RequestParam double longitude, @RequestParam String timezone) {
+        return weatherService.getWeather(latitude, longitude, timezone);
+    }
 
-  @GetMapping("/search")
-  public List<GeoLocation> searchCities(@RequestParam String city) {
-    return weatherService.searchCities(city);
-  }
+    @GetMapping("/search")
+    public List<GeoLocation> searchCities(@RequestParam String city) {
+        return weatherService.searchCities(city);
+    }
 }

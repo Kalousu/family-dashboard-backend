@@ -5,4 +5,5 @@ public record TodoItemResponse(
         String text,
         boolean completed,
         int sortOrder
-) {}
+) {
+}

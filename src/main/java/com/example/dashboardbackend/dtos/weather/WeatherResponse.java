@@ -4,4 +4,5 @@
 
 package com.example.dashboardbackend.dtos.weather;
 
-public record WeatherResponse(Current current) {}
+public record WeatherResponse(Current current) {
+}

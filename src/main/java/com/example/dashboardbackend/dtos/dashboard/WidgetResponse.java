@@ -12,4 +12,5 @@ public record WidgetResponse(
         WidgetPosition position,
         LocalDateTime createdAt,
         Object data
-) {}
+) {
+}

@@ -21,7 +21,7 @@ public class JwtUtils {
     @Value("${spring.app.jwtExpirationMs}")
     private long EXPIRATION_DATE;
 
-    public String extractUsername(String jwt){
+    public String extractUsername(String jwt) {
         return extractAllClaims(jwt).getSubject();
     }
 
@@ -44,7 +44,7 @@ public class JwtUtils {
         return extractAllClaims(jwt).getExpiration().before(new Date());
     }
 
-    private Claims extractAllClaims(String jwt){
+    private Claims extractAllClaims(String jwt) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
@@ -52,7 +52,7 @@ public class JwtUtils {
                 .getPayload();
     }
 
-    private SecretKey getSigningKey(){
+    private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }

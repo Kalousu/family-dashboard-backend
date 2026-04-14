@@ -23,7 +23,7 @@ public class DataSeeder {
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository, DashboardRepository dashboardRepository, FamilyRepository familyRepository) {
         return args -> {
-            if(userRepository.count() == 0) {
+            if (userRepository.count() == 0) {
                 Family family1 = new Family();
                 family1.setFamilyName("BRUHF");
 
