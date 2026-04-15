@@ -49,4 +49,17 @@ public class UserService {
                 user.getColor()
         );
     }
+
+    public UserResponse getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return new UserResponse(
+            user.getId(),
+            user.getName(),
+            user.getUserRole(),
+            user.getFamily().getId(),
+            user.getAvatar(),
+            user.getAvatarType(),
+            user.getColor()
+        );
+    }
 }
