@@ -19,6 +19,8 @@ public class WeatherService {
                 "?latitude=" + latitude +
                 "&longitude=" + longitude +
                 "&current=temperature_2m,wind_speed_10m,weather_code" +
+                "&daily=temperature_2m_max,temperature_2m_min,windspeed_10m_max,weathercode" +
+                "&forecast_days=5" +
                 "&timezone=" + timezone;
 
         return restClient.get()
