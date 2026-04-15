@@ -3,6 +3,7 @@ package com.example.dashboardbackend.services;
 import com.example.dashboardbackend.dtos.auth.AuthRequest;
 import com.example.dashboardbackend.dtos.auth.AuthResponse;
 import com.example.dashboardbackend.dtos.auth.RegisterRequest;
+import com.example.dashboardbackend.exceptions.FamilyNotFoundException;
 import com.example.dashboardbackend.models.enums.UserAvatarType;
 import com.example.dashboardbackend.models.enums.UserRole;
 import com.example.dashboardbackend.repositories.FamilyRepository;
@@ -48,7 +49,8 @@ public class AuthenticationService {
         user.setName(request.name());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setUserRole(UserRole.USER);
-        user.setFamily(familyRepository.findById(request.familyId()).orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        user.setFamily(familyRepository.findById(request.familyId())
+                .orElseThrow(() -> new FamilyNotFoundException("Family for User " + request.name() + " not found")));
         user.setAvatar(avatarURI);
         user.setAvatarType(avatarType);
 
