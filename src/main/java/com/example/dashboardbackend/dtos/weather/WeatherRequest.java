@@ -10,11 +10,4 @@ public record WeatherRequest(
     String timezone
 )
 {
-  public static WeatherRequest fromSettings(Map<String, Object> settings) {
-    return new WeatherRequest(
-        ((Number) settings.get("latitude")).doubleValue(),
-        ((Number) settings.get("longitude")).doubleValue(),
-        (String) settings.get("timezone")
-    );
-  }
 }
