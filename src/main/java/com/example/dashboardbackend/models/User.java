@@ -3,6 +3,7 @@ package com.example.dashboardbackend.models;
 import com.example.dashboardbackend.models.enums.UserColorMode;
 import com.example.dashboardbackend.models.enums.UserRole;
 import com.example.dashboardbackend.models.enums.UserAvatarType;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,6 +34,7 @@ public class User {
     private String password;
 
     @Column
+    @Nullable
     private String pin;
 
     @Column(nullable = true)
@@ -57,34 +59,4 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserColorMode userColorMode;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(userRole.name()));
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return name;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

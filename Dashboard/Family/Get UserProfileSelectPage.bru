@@ -1,0 +1,19 @@
+meta {
+  name: Get UserProfileSelectPage
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{apiUrl}}/family/:familyId/users
+  body: none
+  auth: inherit
+}
+
+params:path {
+  familyId: 1
+}
+
+settings {
+  encodeUrl: true
+}
