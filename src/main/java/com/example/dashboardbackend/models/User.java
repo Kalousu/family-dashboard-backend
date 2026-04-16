@@ -1,5 +1,6 @@
 package com.example.dashboardbackend.models;
 
+import com.example.dashboardbackend.models.enums.UserColorMode;
 import com.example.dashboardbackend.models.enums.UserRole;
 import com.example.dashboardbackend.models.enums.UserAvatarType;
 import jakarta.persistence.*;
@@ -50,6 +51,9 @@ public class User implements UserDetails {
 
     @Column
     private String color;
+
+    @Enumerated(EnumType.STRING)
+    private UserColorMode userColorMode;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
