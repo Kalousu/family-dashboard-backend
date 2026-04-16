@@ -1,0 +1,26 @@
+meta {
+  name: General Login (sysadmin / family)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{apiUrl}}/auth/login
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGYW1pbHkxIiwidHlwZSI6IkZBTUlMWSIsImZhbWlseUlkIjoxLCJpYXQiOjE3NzYzMzg4MTksImV4cCI6MTc3NjMzOTcxOX0.c-gmeufSQZKcLScx2djoHx6CW1yRi-AYni0OvFzSPKo
+}
+
+body:json {
+  {
+    "name": "Family1",
+    "password": "123"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

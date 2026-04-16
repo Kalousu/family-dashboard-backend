@@ -20,7 +20,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,10 +31,13 @@ public class User implements UserDetails {
     @Column
     private String password;
 
+    @Column
+    private String pin;
+
     @Column(nullable = true)
     private String email;
 
-    @Column(nullable = true)
+    @Column
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
@@ -50,34 +53,4 @@ public class User implements UserDetails {
 
     @Column
     private String color;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(userRole.name()));
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return name;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

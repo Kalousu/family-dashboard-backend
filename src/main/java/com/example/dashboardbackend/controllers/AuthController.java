@@ -1,5 +1,8 @@
 package com.example.dashboardbackend.controllers;
 
+import com.example.dashboardbackend.dtos.LoginRequest;
+import com.example.dashboardbackend.dtos.UserSelectRequest;
+import com.example.dashboardbackend.dtos.UserSelectResponse;
 import com.example.dashboardbackend.dtos.auth.AuthRequest;
 import com.example.dashboardbackend.dtos.auth.AuthResponse;
 import com.example.dashboardbackend.dtos.auth.RegisterRequest;
@@ -30,5 +33,21 @@ public class AuthController {
             @RequestBody AuthRequest request
     ) {
         return new ResponseEntity<>(authenticationService.authenticate(request), HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        Object response = authenticationService.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/user/login")
+    public ResponseEntity<UserSelectResponse> selectUser(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody UserSelectRequest request
+    ) {
+        String familyToken = authHeader.replace("Bearer ", "");
+        UserSelectResponse response = authenticationService.selectUser(familyToken, request);
+        return ResponseEntity.ok(response);
     }
 }

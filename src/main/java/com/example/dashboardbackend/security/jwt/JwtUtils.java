@@ -1,6 +1,9 @@
 package com.example.dashboardbackend.security.jwt;
 
+import com.example.dashboardbackend.models.Family;
+import com.example.dashboardbackend.models.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -35,9 +38,51 @@ public class JwtUtils {
 
     }
 
+    public String generateFamilyToken(Family family){
+        return Jwts.builder()
+                .subject(family.getFamilyName())
+                .claim("type", "FAMILY")
+                .claim("familyId", family.getId())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 900000))
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    public String generateUserToken(User user){
+        JwtBuilder builder = Jwts.builder()
+                .claim("type", "USER")
+                .claim("userId", user.getId())
+                .claim("role", user.getUserRole().name());
+
+        if(user.getFamily() != null){
+            builder.claim("familyId", user.getFamily().getId());
+        }
+
+        return builder
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_DATE))
+                .signWith(getSigningKey())
+                .compact();
+    }
+
     public boolean isTokenValid(String jwt, UserDetails userDetails) {
         final String username = extractUsername(jwt);
         return username.equals(userDetails.getUsername()) && !isTokenExpired(jwt);
+    }
+
+    public boolean isValidFamilyToken(String token) {
+        try {
+            Claims claims = extractAllClaims(token);
+            return "FAMILY".equals(claims.get("type", String.class))
+                    && !isTokenExpired(token);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Long extractFamilyId(String token) {
+        return extractAllClaims(token).get("familyId", Long.class);
     }
 
     public boolean isTokenExpired(String jwt) {

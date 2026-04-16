@@ -1,25 +1,32 @@
 package com.example.dashboardbackend.services;
 
+import com.example.dashboardbackend.dtos.*;
 import com.example.dashboardbackend.dtos.auth.AuthRequest;
 import com.example.dashboardbackend.dtos.auth.AuthResponse;
 import com.example.dashboardbackend.dtos.auth.RegisterRequest;
 import com.example.dashboardbackend.exceptions.FamilyNotFoundException;
+import com.example.dashboardbackend.models.Family;
 import com.example.dashboardbackend.models.enums.UserAvatarType;
 import com.example.dashboardbackend.models.enums.UserRole;
 import com.example.dashboardbackend.repositories.FamilyRepository;
 import com.example.dashboardbackend.repositories.UserRepository;
 import com.example.dashboardbackend.security.jwt.JwtUtils;
+import com.example.dashboardbackend.security.principals.FamilyPrincipal;
+import com.example.dashboardbackend.security.principals.UserPrincipal;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.dashboardbackend.models.User;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor()
@@ -47,7 +54,8 @@ public class AuthenticationService {
         var user = new User();
 
         user.setName(request.name());
-        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setPassword(null);
+        user.setPin(request.pin() != null ? passwordEncoder.encode(request.pin()) : null);
         user.setUserRole(UserRole.USER);
         user.setFamily(familyRepository.findById(request.familyId())
                 .orElseThrow(() -> new FamilyNotFoundException("Family for User " + request.name() + " not found")));
@@ -55,14 +63,76 @@ public class AuthenticationService {
         user.setAvatarType(avatarType);
 
         userRepository.save(user);
-        String jwtToken = jwtUtils.generateToken(user);
+        String jwtToken = jwtUtils.generateUserToken(user);
         return new AuthResponse(jwtToken);
     }
 
     public AuthResponse authenticate(AuthRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.name(), request.password()));
         User user = userRepository.findByName(request.name()).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
-        String jwtToken = jwtUtils.generateToken(user);
+        String jwtToken = jwtUtils.generateUserToken(user);
         return new AuthResponse(jwtToken);
+    }
+
+    public Object login(LoginRequest request) {
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.name(), request.password())
+        );
+
+        UserDetails principal = (UserDetails) auth.getPrincipal();
+
+        if (principal instanceof UserPrincipal userPrincipal) {
+            User user = userPrincipal.getUser();
+            if (user.getUserRole() == UserRole.SYSTEM_ADMIN) {
+                String token = jwtUtils.generateUserToken(user);
+                return new SysAdminLoginResponse(token, "SYSADMIN");
+            }
+            throw new BadCredentialsException("Use profile selection");
+        }
+        else if (principal instanceof FamilyPrincipal familyPrincipal) {
+            Family family = familyPrincipal.getFamily();
+            String token = jwtUtils.generateFamilyToken(family);
+            List<UserProfile> profiles = getProfiles(family.getId());
+            return new FamilyLoginResponse(token, profiles, "FAMILY");
+        }
+
+        throw new BadCredentialsException("Invalid credentials");
+    }
+
+    public UserSelectResponse selectUser(String familyToken, UserSelectRequest request) {
+        if (!jwtUtils.isValidFamilyToken(familyToken)) {
+            throw new BadCredentialsException("Invalid family token");
+        }
+
+        Long familyId = jwtUtils.extractFamilyId(familyToken);
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (!user.getFamily().getId().equals(familyId)) {
+            throw new BadCredentialsException("User not in family");
+        }
+
+        if (user.getPin() != null && !user.getPin().isEmpty()) {
+            if (request.pin() == null ||
+                    !passwordEncoder.matches(request.pin(), user.getPin())) {
+                throw new BadCredentialsException("Invalid PIN");
+            }
+        }
+
+        String token = jwtUtils.generateUserToken(user);
+        return new UserSelectResponse(token, user.getId(), user.getUserRole());
+    }
+
+    private List<UserProfile> getProfiles(Long familyId) {
+        return userRepository.findByFamilyId(familyId).stream()
+                .map(user -> new UserProfile(
+                        user.getId(),
+                        user.getName(),
+                        user.getAvatar(),
+                        user.getAvatarType(),
+                        user.getUserRole(),
+                        user.getPin() != null && !user.getPin().isEmpty()
+                ))
+                .toList();
     }
 }
