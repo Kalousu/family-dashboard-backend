@@ -28,5 +28,4 @@ public class UserController {
     public ResponseEntity<UserResponse> getMe(Authentication authentication) {
         return new ResponseEntity<>(userService.getUserByName(authentication.getName()), HttpStatus.OK);
     }
-
 }

@@ -1,5 +1,7 @@
 package com.example.dashboardbackend.controllers;
 
+import com.example.dashboardbackend.dtos.UserResponse;
+import com.example.dashboardbackend.dtos.UserSelectPageResponse;
 import com.example.dashboardbackend.dtos.dashboard.DashboardResponse;
 import com.example.dashboardbackend.services.FamilyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,5 +21,10 @@ public class FamilyController {
     @GetMapping("/{familyId}/dashboard")
     public ResponseEntity<DashboardResponse> getDashboardForFamily(@PathVariable Long familyId) {
         return new ResponseEntity<>(familyService.getDashboardByFamilyId(familyId), HttpStatus.OK);
+    }
+
+    @GetMapping("{familyId}/users")
+    public ResponseEntity<UserSelectPageResponse> getUsersForFamily(@PathVariable Long familyId) {
+        return new ResponseEntity<>(familyService.getUsersForFamily(familyId), HttpStatus.OK);
     }
 }
