@@ -5,6 +5,7 @@
 package com.example.dashboardbackend.controllers;
 
 import com.example.dashboardbackend.dtos.weather.GeoLocation;
+import com.example.dashboardbackend.dtos.weather.WeatherRequest;
 import com.example.dashboardbackend.dtos.weather.WeatherResponse;
 import com.example.dashboardbackend.services.WeatherService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,8 @@ public class WeatherController {
 
     @GetMapping
     public WeatherResponse getWeather(@RequestParam double latitude, @RequestParam double longitude, @RequestParam String timezone) {
-        return weatherService.getWeather(latitude, longitude, timezone);
+        WeatherRequest weatherRequest = new WeatherRequest(latitude, longitude, timezone);
+        return weatherService.getWeather(weatherRequest);
     }
 
     @GetMapping("/search")
