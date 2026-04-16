@@ -1,0 +1,15 @@
+meta {
+  name: User Select-Page Login 
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{apiUrl}}/auth/user/login
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

@@ -21,7 +21,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,10 +32,13 @@ public class User implements UserDetails {
     @Column
     private String password;
 
+    @Column
+    private String pin;
+
     @Column(nullable = true)
     private String email;
 
-    @Column(nullable = true)
+    @Column
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 

@@ -18,4 +18,6 @@ public class Family {
 
     @Column(nullable = false)
     private String familyName;
+
+    private String password;
 }
