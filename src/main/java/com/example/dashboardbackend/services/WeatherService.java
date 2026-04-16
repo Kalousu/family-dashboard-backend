@@ -2,6 +2,7 @@ package com.example.dashboardbackend.services;
 
 import com.example.dashboardbackend.dtos.weather.GeoLocation;
 import com.example.dashboardbackend.dtos.weather.GeoLocationResponse;
+import com.example.dashboardbackend.dtos.weather.WeatherRequest;
 import com.example.dashboardbackend.dtos.weather.WeatherResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,14 +15,14 @@ import java.util.List;
 public class WeatherService {
     private final RestClient restClient = RestClient.create();
 
-    public WeatherResponse getWeather(double latitude, double longitude, String timezone) {
+    public WeatherResponse getWeather(WeatherRequest weatherRequest) {
         String url = "https://api.open-meteo.com/v1/forecast" +
-                "?latitude=" + latitude +
-                "&longitude=" + longitude +
+                "?latitude=" + weatherRequest.latitude() +
+                "&longitude=" + weatherRequest.longitude() +
                 "&current=temperature_2m,wind_speed_10m,weather_code" +
                 "&daily=temperature_2m_max,temperature_2m_min,windspeed_10m_max,weathercode" +
                 "&forecast_days=5" +
-                "&timezone=" + timezone;
+                "&timezone=" + weatherRequest.timezone();
 
         return restClient.get()
                 .uri(url)

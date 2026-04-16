@@ -1,6 +1,7 @@
 package com.example.dashboardbackend.services;
 
 import com.example.dashboardbackend.dtos.dashboard.WidgetResponse;
+import com.example.dashboardbackend.dtos.weather.WeatherRequest;
 import com.example.dashboardbackend.dtos.widgets.CreateWidgetRequest;
 import com.example.dashboardbackend.models.Dashboard;
 import com.example.dashboardbackend.models.widgets.WidgetConfig;
@@ -32,13 +33,15 @@ public class WidgetService {
     }
 
     private Object getWeatherData(WidgetConfig config) {
-        Map<String, Object> settings = config.settings();
+        return weatherService.getWeather(buildWeatherRequest(config.settings()));
+    }
 
-        double latitude = ((Number) settings.get("latitude")).doubleValue();
-        double longitude = ((Number) settings.get("longitude")).doubleValue();
-        String timezone = (String) settings.get("timezone");
-
-        return weatherService.getWeather(latitude, longitude, timezone);
+    private WeatherRequest buildWeatherRequest(Map<String, Object> settings) {
+        return new WeatherRequest(
+            ((Number) settings.get("latitude")).doubleValue(),
+            ((Number) settings.get("longitude")).doubleValue(),
+            (String) settings.get("timezone")
+        );
     }
 
     public void createWidget(CreateWidgetRequest createWidgetRequest) {
