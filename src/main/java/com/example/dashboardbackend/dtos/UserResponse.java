@@ -2,6 +2,7 @@ package com.example.dashboardbackend.dtos;
 
 import com.example.dashboardbackend.models.enums.UserRole;
 import com.example.dashboardbackend.models.enums.UserAvatarType;
+import com.example.dashboardbackend.models.enums.UserColorMode;
 
 public record UserResponse(
         Long id,
@@ -10,6 +11,7 @@ public record UserResponse(
         Long familyId,
         String avatar,
         UserAvatarType avatarType,
-        String pfpColour
+        String pfpColour,
+        UserColorMode userColorMode
 ) {
 }

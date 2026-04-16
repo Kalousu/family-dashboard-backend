@@ -1,5 +1,6 @@
 package com.example.dashboardbackend.models;
 
+import com.example.dashboardbackend.models.enums.UserColorMode;
 import com.example.dashboardbackend.models.enums.UserRole;
 import com.example.dashboardbackend.models.enums.UserAvatarType;
 import jakarta.persistence.*;
@@ -53,4 +54,37 @@ public class User {
 
     @Column
     private String color;
+
+    @Enumerated(EnumType.STRING)
+    private UserColorMode userColorMode;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(userRole.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return name;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
