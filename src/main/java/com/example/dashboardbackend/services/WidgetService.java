@@ -3,6 +3,7 @@ package com.example.dashboardbackend.services;
 import com.example.dashboardbackend.dtos.dashboard.WidgetResponse;
 import com.example.dashboardbackend.dtos.weather.WeatherRequest;
 import com.example.dashboardbackend.dtos.widgets.CreateWidgetRequest;
+import com.example.dashboardbackend.exceptions.WidgetNotFoundException;
 import com.example.dashboardbackend.models.Dashboard;
 import com.example.dashboardbackend.models.widgets.WidgetConfig;
 import com.example.dashboardbackend.models.widgets.WidgetItem;
@@ -56,5 +57,12 @@ public class WidgetService {
         widget.setCreatedAt(LocalDateTime.now());
 
         widgetItemRepository.save(widget);
+    }
+
+    public void deleteWidget(Long widgetId) {
+        WidgetItem widgetToDelete = widgetItemRepository.findById(widgetId)
+                .orElseThrow(() -> new WidgetNotFoundException("Widget you tried to delete not found"));
+
+        widgetItemRepository.delete(widgetToDelete);
     }
 }
