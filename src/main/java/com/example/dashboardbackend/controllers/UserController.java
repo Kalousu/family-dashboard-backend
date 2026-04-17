@@ -5,6 +5,7 @@ import com.example.dashboardbackend.dtos.UserResponse;
 import com.example.dashboardbackend.models.User;
 import com.example.dashboardbackend.models.enums.UserRole;
 import com.example.dashboardbackend.services.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<List<UserResponse>> getUsers() {

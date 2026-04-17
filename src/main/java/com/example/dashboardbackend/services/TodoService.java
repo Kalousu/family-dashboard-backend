@@ -3,15 +3,16 @@ package com.example.dashboardbackend.services;
 import com.example.dashboardbackend.dtos.todo.TodoItemResponse;
 import com.example.dashboardbackend.models.widgets.todo.TodoItem;
 import com.example.dashboardbackend.repositories.TodoRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TodoService {
-    @Autowired
-    private TodoRepository todoRepository;
+    private final TodoRepository todoRepository;
 
     public List<TodoItemResponse> getTodosByWidgetId(Long widgetId) {
         List<TodoItem> items = todoRepository.findTodoItemsByWidgetItem_Id(widgetId)

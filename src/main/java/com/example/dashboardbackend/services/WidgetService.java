@@ -9,6 +9,7 @@ import com.example.dashboardbackend.models.widgets.WidgetConfig;
 import com.example.dashboardbackend.models.widgets.WidgetItem;
 import com.example.dashboardbackend.repositories.DashboardRepository;
 import com.example.dashboardbackend.repositories.WidgetItemRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +17,10 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class WidgetService {
-    @Autowired
     WeatherService weatherService;
-
-    @Autowired
     DashboardRepository dashboardRepository;
-
-    @Autowired
     WidgetItemRepository widgetItemRepository;
 
     public Object getWidgetData(Long widgetId, String type, WidgetConfig config) {

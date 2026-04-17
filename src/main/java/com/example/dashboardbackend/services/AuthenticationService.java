@@ -29,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor()
+@RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;

@@ -45,10 +45,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    FamilyRepository familyRepository;
+    private final UserRepository userRepository;
+    private final FamilyRepository familyRepository;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
