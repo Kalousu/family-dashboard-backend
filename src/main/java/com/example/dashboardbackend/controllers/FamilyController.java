@@ -24,4 +24,5 @@ public class FamilyController {
     public ResponseEntity<UserSelectPageResponse> getUsersForFamily(@PathVariable Long familyId) {
         return new ResponseEntity<>(familyService.getUsersForFamily(familyId), HttpStatus.OK);
     }
+
 }
