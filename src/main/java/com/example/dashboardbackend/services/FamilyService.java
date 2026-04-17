@@ -11,23 +11,20 @@ import com.example.dashboardbackend.models.User;
 import com.example.dashboardbackend.repositories.DashboardRepository;
 import com.example.dashboardbackend.repositories.FamilyRepository;
 import com.example.dashboardbackend.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class FamilyService {
-    @Autowired
-    FamilyRepository familyRepository;
-    @Autowired
-    DashboardRepository dashboardRepository;
-    @Autowired
-    private WidgetService widgetService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private UserRepository userRepository;
+    private final FamilyRepository familyRepository;
+    private final DashboardRepository dashboardRepository;
+    private final WidgetService widgetService;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     public DashboardResponse getDashboardByFamilyId(Long familyId) {
         Dashboard dashboard = dashboardRepository.findByFamily_Id(familyId).orElseThrow(() -> new RuntimeException("No dashboard found"));

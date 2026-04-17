@@ -3,6 +3,7 @@ package com.example.dashboardbackend.services;
 import com.example.dashboardbackend.dtos.UserResponse;
 import com.example.dashboardbackend.models.User;
 import com.example.dashboardbackend.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,9 +15,9 @@ import java.util.List;
 import lombok.Getter;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public List<UserResponse> getUsers() {
         List<UserResponse> users = new ArrayList<>();

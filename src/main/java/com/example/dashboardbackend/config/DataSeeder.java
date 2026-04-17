@@ -11,6 +11,7 @@ import com.example.dashboardbackend.models.widgets.WidgetPosition;
 import com.example.dashboardbackend.repositories.DashboardRepository;
 import com.example.dashboardbackend.repositories.FamilyRepository;
 import com.example.dashboardbackend.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -21,9 +22,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Configuration
+@RequiredArgsConstructor
 public class DataSeeder {
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository, DashboardRepository dashboardRepository, FamilyRepository familyRepository) {

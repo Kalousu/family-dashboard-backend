@@ -2,6 +2,7 @@ package com.example.dashboardbackend.controllers;
 
 import com.example.dashboardbackend.dtos.todo.TodoItemResponse;
 import com.example.dashboardbackend.services.TodoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/widgets/todo")
+@RequiredArgsConstructor
 public class TodoController {
-    @Autowired
-    private TodoService todoService;
+    private final TodoService todoService;
 
     @GetMapping("/{widgetId}")
     public ResponseEntity<List<TodoItemResponse>> getTodos(
