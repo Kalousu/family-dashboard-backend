@@ -7,5 +7,6 @@ public record MemeResponse(
     String permalink,
     String author,
     int imageWidth,
-    int imageHeight
+    int imageHeight,
+    boolean isVideo
 ) {}
