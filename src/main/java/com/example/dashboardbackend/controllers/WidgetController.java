@@ -1,5 +1,7 @@
 package com.example.dashboardbackend.controllers;
 
+import com.example.dashboardbackend.dtos.UpdateWidgetConfigRequest;
+import com.example.dashboardbackend.dtos.UpdateWidgetPositionRequest;
 import com.example.dashboardbackend.dtos.widgets.CreateWidgetRequest;
 import com.example.dashboardbackend.services.WidgetService;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +26,27 @@ public class WidgetController {
 
     @DeleteMapping("/{widgetId}")
     public ResponseEntity<Object> deleteWidget(
-            @RequestParam Long id
+            @PathVariable Long widgetId
     ){
-        widgetService.deleteWidget(id);
+        widgetService.deleteWidget(widgetId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{widgetId}/config")
+    public ResponseEntity<Object> updateWidgetConfig(
+            @PathVariable Long widgetId,
+            @RequestBody UpdateWidgetConfigRequest updateWidgetConfigRequest
+    ){
+        widgetService.updateWidgetConfig(widgetId, updateWidgetConfigRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{widgetId}/position")
+    public ResponseEntity<Object> updateWidgetPosition(
+            @PathVariable Long widgetId,
+            @RequestBody UpdateWidgetPositionRequest updateWidgetPositionRequest
+    ){
+        widgetService.updateWidgetPosition(widgetId, updateWidgetPositionRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
