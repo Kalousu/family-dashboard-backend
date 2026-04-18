@@ -100,7 +100,7 @@ public class AuthenticationService {
             String token = jwtUtils.generateFamilyToken(family);
             addCookie(response, "family_token", token);
             List<UserProfile> profiles = getProfiles(family.getId());
-            return new FamilyLoginResponse(profiles, "FAMILY");
+            return new FamilyLoginResponse(family.getId(), profiles, "FAMILY");
         }
 
         throw new BadCredentialsException("Invalid credentials");
@@ -147,26 +147,27 @@ public class AuthenticationService {
     private void addCookie(HttpServletResponse response, String key, String value) {
         ResponseCookie cookie = ResponseCookie.from(key, value)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)  // Changed to false for local development (HTTP)
                 .path("/")
-                .sameSite("Strict")
+                .sameSite("None")  // Changed to None to allow cross-origin
+                .domain("localhost")  // Set domain to localhost for both ports
                 .maxAge(Duration.ofDays(7))
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
-    public String getStatus(String authToken, String familyToken) {
+    public StatusResponse getStatus(String authToken, String familyToken) {
         if(authToken != null){
             Claims claims = jwtUtils.extractAllClaims(authToken);
             String role = claims.get("role", String.class);
             if("SYSTEM_ADMIN".equals(role)){
-                return "SYSADMIN";
+                return new StatusResponse("SYSADMIN");
             }
-            return "USER";
+            return new StatusResponse("USER");
         }
         if(familyToken != null && jwtUtils.isValidFamilyToken(familyToken)) {
-            return "FAMILY";
+            return new StatusResponse("FAMILY");
         }
-        return "NONE";
+        return new StatusResponse("NONE");
     }
 }

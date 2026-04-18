@@ -60,7 +60,7 @@ public class AuthController {
     }
 
     @GetMapping("/status")
-    public ResponseEntity<?> getStatus(
+    public ResponseEntity<StatusResponse> getStatus(
             @CookieValue(value = "auth_token", required = false) String authToken,
             @CookieValue(value = "family_token", required = false) String familyToken
     ) {

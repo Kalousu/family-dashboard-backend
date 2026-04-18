@@ -31,12 +31,12 @@ public class MediaService {
                 .toLowerCase();
 
         String contentType = Optional.ofNullable(file.getContentType())
-                .orElseThrow(() -> new UnsupportedMediaTypeException("Content type is missing"));
+                .orElseThrow(() -> new UnsupportedMediaTypeException("Content role is missing"));
 
         String ext = getFileExtension(fileName);
         String folder = switch (ext) {
             case "jpg", "jpeg", "png", "gif" -> "images";
-            default -> throw new UnsupportedMediaTypeException("Extension of type " + contentType + " not supported");
+            default -> throw new UnsupportedMediaTypeException("Extension of role " + contentType + " not supported");
         };
 
         String key = String.format("%s/%s-%s", folder, UUID.randomUUID(), fileName);
