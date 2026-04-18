@@ -19,9 +19,9 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class WidgetService {
-    WeatherService weatherService;
-    DashboardRepository dashboardRepository;
-    WidgetItemRepository widgetItemRepository;
+    private final WeatherService weatherService;
+    private final DashboardRepository dashboardRepository;
+    private final WidgetItemRepository widgetItemRepository;
 
     public Object getWidgetData(Long widgetId, String type, WidgetConfig config) {
         return switch (type) {
