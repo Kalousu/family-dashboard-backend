@@ -1,5 +1,7 @@
 package com.example.dashboardbackend.services;
 
+import com.example.dashboardbackend.dtos.UpdateWidgetConfigRequest;
+import com.example.dashboardbackend.dtos.UpdateWidgetPositionRequest;
 import com.example.dashboardbackend.dtos.dashboard.WidgetResponse;
 import com.example.dashboardbackend.dtos.weather.WeatherRequest;
 import com.example.dashboardbackend.dtos.widgets.CreateWidgetRequest;
@@ -61,5 +63,21 @@ public class WidgetService {
                 .orElseThrow(() -> new WidgetNotFoundException("Widget you tried to delete not found"));
 
         widgetItemRepository.delete(widgetToDelete);
+    }
+
+    public void updateWidgetConfig(Long widgetId, UpdateWidgetConfigRequest updateWidgetConfigRequest) {
+        WidgetItem widgetToUpdate = widgetItemRepository.findById(widgetId)
+                .orElseThrow(() -> new WidgetNotFoundException("Widget you tried to update not found"));
+
+        widgetToUpdate.setWidgetConfig(updateWidgetConfigRequest.widgetConfig());
+        widgetItemRepository.save(widgetToUpdate);
+    }
+
+    public void updateWidgetPosition(Long widgetId, UpdateWidgetPositionRequest updateWidgetPositionRequest) {
+        WidgetItem widgetToUpdate = widgetItemRepository.findById(widgetId)
+                .orElseThrow(() -> new WidgetNotFoundException("Widget you tried to update not found"));
+
+        widgetToUpdate.setWidgetPosition(updateWidgetPositionRequest.widgetPosition());
+        widgetItemRepository.save(widgetToUpdate);
     }
 }
