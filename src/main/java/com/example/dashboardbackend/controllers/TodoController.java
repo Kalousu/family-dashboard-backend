@@ -1,9 +1,6 @@
 package com.example.dashboardbackend.controllers;
 
-import com.example.dashboardbackend.dtos.todo.TodoCreateRequest;
-import com.example.dashboardbackend.dtos.todo.TodoItemResponse;
-import com.example.dashboardbackend.dtos.todo.TodoUpdatePositionRequest;
-import com.example.dashboardbackend.dtos.todo.TodoUpdateTextRequest;
+import com.example.dashboardbackend.dtos.todo.*;
 import com.example.dashboardbackend.services.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +51,14 @@ public class TodoController {
     public ResponseEntity<Void> deleteTodo(@PathVariable Long id) {
         todoService.deleteTodo(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/{id}/completed")
+    public ResponseEntity<TodoItemResponse> updateCompleted(
+        @PathVariable Long id,
+        @RequestBody TodoUpdateCompletedRequest request
+    ) {
+        return new ResponseEntity<>(todoService.updateCompleted(id, request), HttpStatus.OK);
     }
 
 }

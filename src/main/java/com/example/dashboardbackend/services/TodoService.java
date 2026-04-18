@@ -1,9 +1,6 @@
 package com.example.dashboardbackend.services;
 
-import com.example.dashboardbackend.dtos.todo.TodoCreateRequest;
-import com.example.dashboardbackend.dtos.todo.TodoItemResponse;
-import com.example.dashboardbackend.dtos.todo.TodoUpdatePositionRequest;
-import com.example.dashboardbackend.dtos.todo.TodoUpdateTextRequest;
+import com.example.dashboardbackend.dtos.todo.*;
 import com.example.dashboardbackend.models.widgets.todo.TodoItem;
 import com.example.dashboardbackend.repositories.TodoRepository;
 import com.example.dashboardbackend.repositories.WidgetItemRepository;
@@ -68,5 +65,14 @@ public class TodoService {
 
     public void deleteTodo(Long id) {
         todoRepository.deleteById(id);
+    }
+
+    public TodoItemResponse updateCompleted(Long id, TodoUpdateCompletedRequest request) {
+        TodoItem item = todoRepository.findById(id)
+                                      .orElseThrow(() -> new RuntimeException("Todo " + id + " nicht gefunden"));
+
+        item.setCompleted(request.completed());
+        TodoItem saved = todoRepository.save(item);
+        return new TodoItemResponse(saved.getId(), saved.getText(), saved.isCompleted(), saved.getSortOrder());
     }
 }
