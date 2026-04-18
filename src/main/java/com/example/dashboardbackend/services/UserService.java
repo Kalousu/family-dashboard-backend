@@ -22,10 +22,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     public List<UserResponse> getUsers() {
-        List<UserResponse> users = new ArrayList<>();
-
-        userRepository.findAll().stream().forEach(user -> {
-            users.add(new UserResponse(
+        return userRepository.findAll().stream().map(user ->
+            new UserResponse(
                     user.getId(),
                     user.getName(),
                     user.getUserRole(),
@@ -34,10 +32,8 @@ public class UserService {
                     user.getAvatarType(),
                     user.getColor(),
                     user.getUserColorMode()
-            ));
-        });
-
-        return users;
+            )
+        ).toList();
     }
 
     public UserResponse getUserByName(String name) {
