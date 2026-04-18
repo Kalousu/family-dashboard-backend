@@ -13,6 +13,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(uniqueConstraints = {
+        @UniqueConstraint (columnNames = "familyName")
+})
 public class Family {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +25,8 @@ public class Family {
     private String familyName;
 
     private String password;
+
+    private String email;
 
     @OneToOne(mappedBy = "family", cascade = CascadeType.ALL)
     private Dashboard dashboard;

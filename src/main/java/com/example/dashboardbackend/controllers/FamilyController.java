@@ -1,5 +1,6 @@
 package com.example.dashboardbackend.controllers;
 
+import com.example.dashboardbackend.dtos.CreateFamilyRequest;
 import com.example.dashboardbackend.dtos.UserResponse;
 import com.example.dashboardbackend.dtos.UserSelectPageResponse;
 import com.example.dashboardbackend.dtos.dashboard.DashboardResponse;
@@ -24,6 +25,22 @@ public class FamilyController {
     @GetMapping("{familyId}/users")
     public ResponseEntity<UserSelectPageResponse> getUsersForFamily(@PathVariable Long familyId) {
         return new ResponseEntity<>(familyService.getUsersForFamily(familyId), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<Object> createFamily(
+            @RequestBody CreateFamilyRequest createFamilyRequest
+    ){
+        familyService.createFamily(createFamilyRequest);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/{familyId}")
+    public ResponseEntity<Object> deleteFamily(
+            @PathVariable Long familyId
+    ){
+        familyService.deleteFamilyById(familyId);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
 }
