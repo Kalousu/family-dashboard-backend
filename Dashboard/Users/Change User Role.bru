@@ -1,0 +1,25 @@
+meta {
+  name: Change User Role
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{apiUrl}}/users/:userId/role
+  body: json
+  auth: inherit
+}
+
+params:path {
+  userId: 1
+}
+
+body:json {
+  {
+    "userRole": "FAMILY_ADMIN"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

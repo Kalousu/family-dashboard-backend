@@ -1,0 +1,19 @@
+meta {
+  name: Get Family By FamilyId
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{apiUrl}}/family/:familyId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  familyId: 1
+}
+
+settings {
+  encodeUrl: true
+}

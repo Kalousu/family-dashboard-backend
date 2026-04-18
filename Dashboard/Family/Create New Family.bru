@@ -1,0 +1,23 @@
+meta {
+  name: Create New Family
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{apiUrl}}/family
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "familyName": "Familie1",
+    "password": "password123",
+    "email": "hodenkrebs@gmail.com"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

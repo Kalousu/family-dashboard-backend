@@ -7,5 +7,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WidgetItemRepository extends JpaRepository<WidgetItem, Long> {
-    Optional<List<WidgetItem>> findWidgetItemsByFamilyId(Long familyId);
 }

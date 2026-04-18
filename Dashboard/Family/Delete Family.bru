@@ -1,0 +1,19 @@
+meta {
+  name: Delete Family
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{apiUrl}}/family/:familyId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  familyId: 1
+}
+
+settings {
+  encodeUrl: true
+}

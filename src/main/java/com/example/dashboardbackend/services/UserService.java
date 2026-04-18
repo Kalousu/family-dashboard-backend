@@ -27,7 +27,7 @@ public class UserService {
                     user.getId(),
                     user.getName(),
                     user.getUserRole(),
-                    user.getFamily().getId(),
+                    user.getFamily() != null ? user.getFamily().getId() : null,
                     user.getAvatar(),
                     user.getAvatarType(),
                     user.getColor(),

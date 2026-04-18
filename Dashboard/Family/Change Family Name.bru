@@ -1,0 +1,25 @@
+meta {
+  name: Change Family Name
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{apiUrl}}/family/:familyId/name
+  body: json
+  auth: inherit
+}
+
+params:path {
+  familyId: 1
+}
+
+body:json {
+  {
+    "familyName": "Daniel's Familie"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

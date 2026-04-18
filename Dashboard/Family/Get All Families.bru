@@ -1,0 +1,15 @@
+meta {
+  name: Get All Families
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{apiUrl}}/family
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

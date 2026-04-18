@@ -1,13 +1,24 @@
 meta {
-  name: User Select-Page Login 
+  name: User Select-Page Login
   type: http
-  seq: 5
+  seq: 6
 }
 
 post {
   url: {{apiUrl}}/auth/user/login
-  body: none
-  auth: inherit
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGYW1pbHkxIiwidHlwZSI6IkZBTUlMWSIsImZhbWlseUlkIjoxLCJpYXQiOjE3NzY1MTU3MTcsImV4cCI6MTc3NjUxNjYxN30.iy4ahGEc7U2um48GXZWPo9icxL7JD3z8KBxH0QToSi4
+}
+
+body:json {
+  {
+    "userId": 1,
+    "pin": null
+  }
 }
 
 settings {

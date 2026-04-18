@@ -6,6 +6,7 @@ import com.example.dashboardbackend.dtos.WidgetListResponse;
 import com.example.dashboardbackend.dtos.dashboard.WidgetResponse;
 import com.example.dashboardbackend.dtos.weather.WeatherRequest;
 import com.example.dashboardbackend.dtos.widgets.CreateWidgetRequest;
+import com.example.dashboardbackend.exceptions.DashboardNotFoundException;
 import com.example.dashboardbackend.exceptions.WidgetNotFoundException;
 import com.example.dashboardbackend.models.Dashboard;
 import com.example.dashboardbackend.models.widgets.WidgetConfig;
@@ -23,9 +24,9 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class WidgetService {
-    WeatherService weatherService;
-    DashboardRepository dashboardRepository;
-    WidgetItemRepository widgetItemRepository;
+    private final WeatherService weatherService;
+    private final DashboardRepository dashboardRepository;
+    private final WidgetItemRepository widgetItemRepository;
 
     public Object getWidgetData(Long widgetId, String type, WidgetConfig config) {
         return switch (type) {
@@ -48,7 +49,7 @@ public class WidgetService {
 
     public void createWidget(CreateWidgetRequest createWidgetRequest) {
         Dashboard dashboard = dashboardRepository.findById(createWidgetRequest.dashboardId())
-                .orElseThrow(() -> new RuntimeException("Dashboard not found"));
+                .orElseThrow(() -> new DashboardNotFoundException("Dashboard with Id " + createWidgetRequest.dashboardId() + " doesn't exist"));
 
         WidgetItem widget = new WidgetItem();
         widget.setType(createWidgetRequest.type());
@@ -96,8 +97,10 @@ public class WidgetService {
     }
 
     public List<WidgetListResponse> getWidgetsByFamilyId(Long familyId) {
-        List<WidgetItem> widgetItems = widgetItemRepository.findWidgetItemsByFamilyId(familyId)
-                .orElseThrow(() -> new WidgetNotFoundException("Widget for Family Id " + familyId + " not found"));
+        Dashboard dashboard = dashboardRepository.findByFamily_Id(familyId)
+                .orElseThrow(() -> new DashboardNotFoundException("Dashboard for Family " + familyId + " not found"));
+
+        List<WidgetItem> widgetItems = dashboard.getWidgetItems();
 
         return widgetItems.stream().map(widgetItem ->
                 new WidgetListResponse(

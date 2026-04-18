@@ -1,17 +1,13 @@
 meta {
   name: General Login (sysadmin / family)
   type: http
-  seq: 4
+  seq: 5
 }
 
 post {
   url: {{apiUrl}}/auth/login
   body: json
-  auth: bearer
-}
-
-auth:bearer {
-  token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJGYW1pbHkxIiwidHlwZSI6IkZBTUlMWSIsImZhbWlseUlkIjoxLCJpYXQiOjE3NzYzMzg4MTksImV4cCI6MTc3NjMzOTcxOX0.c-gmeufSQZKcLScx2djoHx6CW1yRi-AYni0OvFzSPKo
+  auth: none
 }
 
 body:json {

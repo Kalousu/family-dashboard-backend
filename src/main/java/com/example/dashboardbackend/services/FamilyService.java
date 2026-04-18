@@ -78,7 +78,7 @@ public class FamilyService {
 
     public void deleteFamilyById(Long familyId) {
         Family familyToDelete = familyRepository.findById(familyId)
-                .orElseThrow(() -> new RuntimeException("Family you want to delete not found"));
+                .orElseThrow(() -> new FamilyNotFoundException("Family you want to delete not found"));
 
         familyRepository.delete(familyToDelete);
     }

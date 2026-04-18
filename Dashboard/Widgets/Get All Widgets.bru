@@ -1,0 +1,15 @@
+meta {
+  name: Get All Widgets
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{apiUrl}}/widgets
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
