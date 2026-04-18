@@ -1,0 +1,15 @@
+meta {
+  name: Get Weather
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{apiUrl}}/weather
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
