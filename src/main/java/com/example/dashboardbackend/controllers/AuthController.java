@@ -7,6 +7,7 @@ import com.example.dashboardbackend.dtos.auth.AuthRequest;
 import com.example.dashboardbackend.dtos.auth.AuthResponse;
 import com.example.dashboardbackend.dtos.auth.RegisterRequest;
 import com.example.dashboardbackend.services.AuthenticationService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,18 +38,21 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        Object response = authenticationService.login(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> login(
+            @RequestBody LoginRequest request,
+            HttpServletResponse response
+    ) {
+        Object res = authenticationService.login(request, response);
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping("/user/login")
     public ResponseEntity<UserSelectResponse> selectUser(
-            @RequestHeader("Authorization") String authHeader,
-            @RequestBody UserSelectRequest request
+            @CookieValue("family_token") String familyToken,
+            @RequestBody UserSelectRequest request,
+            HttpServletResponse response
     ) {
-        String familyToken = authHeader.replace("Bearer ", "");
-        UserSelectResponse response = authenticationService.selectUser(familyToken, request);
-        return ResponseEntity.ok(response);
+        UserSelectResponse res = authenticationService.selectUser(familyToken, request, response);
+        return ResponseEntity.ok(res);
     }
 }

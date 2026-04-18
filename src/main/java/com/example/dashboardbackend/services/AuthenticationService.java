@@ -13,9 +13,12 @@ import com.example.dashboardbackend.repositories.UserRepository;
 import com.example.dashboardbackend.security.jwt.JwtUtils;
 import com.example.dashboardbackend.security.principals.FamilyPrincipal;
 import com.example.dashboardbackend.security.principals.UserPrincipal;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import com.example.dashboardbackend.models.User;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
@@ -42,7 +46,7 @@ public class AuthenticationService {
         String avatarURI;
         UserAvatarType avatarType;
 
-        if(avatar != null && !avatar.isEmpty()) {
+        if (avatar != null && !avatar.isEmpty()) {
             String avatarKey = mediaService.uploadFile(avatar);
             avatarURI = "https://pub-3450ee438ead45c7bddcf1803d1fc37f.r2.dev/" + avatarKey;
             avatarType = UserAvatarType.URL;
@@ -74,7 +78,7 @@ public class AuthenticationService {
         return new AuthResponse(jwtToken);
     }
 
-    public Object login(LoginRequest request) {
+    public Object login(LoginRequest request, HttpServletResponse response) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.name(), request.password())
         );
@@ -85,21 +89,22 @@ public class AuthenticationService {
             User user = userPrincipal.getUser();
             if (user.getUserRole() == UserRole.SYSTEM_ADMIN) {
                 String token = jwtUtils.generateUserToken(user);
-                return new SysAdminLoginResponse(token, "SYSADMIN");
+                addCookie(response, "auth_token", token);
+                return new SysAdminLoginResponse("SYSADMIN");
             }
             throw new BadCredentialsException("Use profile selection");
-        }
-        else if (principal instanceof FamilyPrincipal familyPrincipal) {
+        } else if (principal instanceof FamilyPrincipal familyPrincipal) {
             Family family = familyPrincipal.getFamily();
             String token = jwtUtils.generateFamilyToken(family);
+            addCookie(response, "family_token", token);
             List<UserProfile> profiles = getProfiles(family.getId());
-            return new FamilyLoginResponse(token, profiles, "FAMILY");
+            return new FamilyLoginResponse(profiles, "FAMILY");
         }
 
         throw new BadCredentialsException("Invalid credentials");
     }
 
-    public UserSelectResponse selectUser(String familyToken, UserSelectRequest request) {
+    public UserSelectResponse selectUser(String familyToken, UserSelectRequest request, HttpServletResponse response) {
         if (!jwtUtils.isValidFamilyToken(familyToken)) {
             throw new BadCredentialsException("Invalid family token");
         }
@@ -120,7 +125,8 @@ public class AuthenticationService {
         }
 
         String token = jwtUtils.generateUserToken(user);
-        return new UserSelectResponse(token, user.getId(), user.getUserRole());
+        addCookie(response, "auth_token", token);
+        return new UserSelectResponse(user.getId(), user.getUserRole());
     }
 
     private List<UserProfile> getProfiles(Long familyId) {
@@ -134,5 +140,16 @@ public class AuthenticationService {
                         user.getPin() != null && !user.getPin().isEmpty()
                 ))
                 .toList();
+    }
+
+    private void addCookie(HttpServletResponse response, String key, String value) {
+        ResponseCookie cookie = ResponseCookie.from(key, value)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .sameSite("Strict")
+                .maxAge(Duration.ofDays(7))
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 }
