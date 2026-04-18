@@ -1,15 +1,12 @@
 package com.example.dashboardbackend.controllers;
 
-import com.example.dashboardbackend.dtos.todo.TodoItemResponse;
+import com.example.dashboardbackend.dtos.todo.*;
 import com.example.dashboardbackend.services.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,6 +21,44 @@ public class TodoController {
             @PathVariable Long widgetId
     ) {
         return new ResponseEntity<>(todoService.getTodosByWidgetId(widgetId), HttpStatus.OK);
+    }
+
+    @PostMapping("/{widgetId}")
+    public ResponseEntity<TodoItemResponse> createTodo(
+        @PathVariable Long widgetId,
+        @RequestBody TodoCreateRequest request
+    ) {
+        return new ResponseEntity<>(todoService.createTodo(widgetId, request), HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{id}/text")
+    public ResponseEntity<TodoItemResponse> updateText(
+        @PathVariable Long id,
+        @RequestBody TodoUpdateTextRequest request
+    ) {
+        return new ResponseEntity<>(todoService.updateText(id, request), HttpStatus.OK);
+    }
+
+    @PatchMapping("/positions")
+    public ResponseEntity<Void> updatePositions(
+        @RequestBody List<TodoUpdatePositionRequest> requests
+    ) {
+        todoService.updatePositions(requests);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTodo(@PathVariable Long id) {
+        todoService.deleteTodo(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/{id}/completed")
+    public ResponseEntity<TodoItemResponse> updateCompleted(
+        @PathVariable Long id,
+        @RequestBody TodoUpdateCompletedRequest request
+    ) {
+        return new ResponseEntity<>(todoService.updateCompleted(id, request), HttpStatus.OK);
     }
 
 }

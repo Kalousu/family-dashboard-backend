@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface TodoRepository extends JpaRepository<TodoItem, Long> {
     Optional<List<TodoItem>> findTodoItemsByWidgetItem_Id(Long widgetId);
+    Optional<TodoItem> findTopByWidgetItem_IdOrderBySortOrderDesc(Long widgetId);
 }

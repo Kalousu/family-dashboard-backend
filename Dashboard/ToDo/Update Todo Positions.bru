@@ -1,0 +1,32 @@
+meta {
+  name: Update Todo Positions
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{apiUrl}}/widgets/todo/positions
+  body: json
+  auth: inherit
+}
+
+body:json {
+  [
+    {
+      "id": 1,
+      "sortOrder": 0
+    },
+    {
+      "id": 2,
+      "sortOrder": 1
+    },
+    {
+      "id": 3,
+      "sortOrder": 2
+    }
+  ]
+}
+
+settings {
+  encodeUrl: true
+}

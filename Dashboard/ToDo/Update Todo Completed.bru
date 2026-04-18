@@ -1,0 +1,21 @@
+meta {
+  name: Update Todo Completed
+  type: http
+  seq: 1
+}
+
+patch {
+  url: {{apiUrl}}/widgets/todo/1/completed
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "completed": true
+  }
+}
+
+settings {
+  encodeUrl: true
+}
