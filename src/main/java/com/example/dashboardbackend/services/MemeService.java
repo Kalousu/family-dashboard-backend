@@ -16,7 +16,7 @@ public class MemeService {
     headers.set("User-Agent", "DashboardBot/1.0");
 
     ResponseEntity<RedditResponse> response = restTemplate.exchange(
-        "https://www.reddit.com/r/memes/top.json?t=week&limit=1",
+        "https://www.reddit.com/r/memes/top.json?t=day&limit=1",
         HttpMethod.GET,
         new HttpEntity<>(headers),
         RedditResponse.class
