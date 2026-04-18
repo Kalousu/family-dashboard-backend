@@ -38,9 +38,9 @@ public class WidgetService {
 
     private WeatherRequest buildWeatherRequest(Map<String, Object> settings) {
         return new WeatherRequest(
-            ((Number) settings.get("latitude")).doubleValue(),
-            ((Number) settings.get("longitude")).doubleValue(),
-            (String) settings.get("timezone")
+                ((Number) settings.get("latitude")).doubleValue(),
+                ((Number) settings.get("longitude")).doubleValue(),
+                (String) settings.get("timezone")
         );
     }
 
