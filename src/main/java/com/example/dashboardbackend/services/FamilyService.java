@@ -1,12 +1,10 @@
 package com.example.dashboardbackend.services;
 
-import com.example.dashboardbackend.dtos.CreateFamilyRequest;
-import com.example.dashboardbackend.dtos.UserProfile;
-import com.example.dashboardbackend.dtos.UserSelectPageResponse;
-import com.example.dashboardbackend.dtos.UserSelectResponse;
+import com.example.dashboardbackend.dtos.*;
 import com.example.dashboardbackend.dtos.dashboard.DashboardResponse;
 import com.example.dashboardbackend.dtos.dashboard.WidgetResponse;
 import com.example.dashboardbackend.exceptions.FamilyAlreadyExistsException;
+import com.example.dashboardbackend.exceptions.FamilyNotFoundException;
 import com.example.dashboardbackend.models.Dashboard;
 import com.example.dashboardbackend.models.Family;
 import com.example.dashboardbackend.models.User;
@@ -83,5 +81,37 @@ public class FamilyService {
                 .orElseThrow(() -> new RuntimeException("Family you want to delete not found"));
 
         familyRepository.delete(familyToDelete);
+    }
+
+    public List<FamilyResponse> getFamilies() {
+        List<Family> families = familyRepository.findAll();
+        return families.stream().map(family -> new FamilyResponse(
+                family.getId(),
+                family.getFamilyName(),
+                family.getEmail()
+        )).toList();
+    }
+
+    public FamilyResponse getFamilyById(Long familyId) {
+        Family family = familyRepository.findById(familyId)
+                .orElseThrow(() -> new FamilyNotFoundException("Family with Id " + familyId + " not found"));
+
+        return new FamilyResponse(
+                family.getId(),
+                family.getFamilyName(),
+                family.getEmail()
+        );
+    }
+
+    public void updateFamilyName(Long familyId, UpdateFamilyNameRequest updateFamilyNameRequest) {
+        Family familyToUpdate = familyRepository.findById(familyId)
+                .orElseThrow(() -> new FamilyNotFoundException("Family with Id " + familyId + " not found"));
+
+        familyToUpdate.setFamilyName(updateFamilyNameRequest.familyName());
+        try{
+            familyRepository.save(familyToUpdate);
+        }catch(DataIntegrityViolationException e){
+            throw new FamilyAlreadyExistsException(updateFamilyNameRequest.familyName());
+        }
     }
 }
