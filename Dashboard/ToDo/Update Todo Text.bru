@@ -1,0 +1,21 @@
+meta {
+  name: Update Todo Text
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{apiUrl}}/widgets/todo/1/text
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "text": "Einkaufen gehen - erledigt"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
