@@ -90,7 +90,7 @@ public class JwtUtils {
         return extractAllClaims(jwt).getExpiration().before(new Date());
     }
 
-    private Claims extractAllClaims(String jwt) {
+    public Claims extractAllClaims(String jwt) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()

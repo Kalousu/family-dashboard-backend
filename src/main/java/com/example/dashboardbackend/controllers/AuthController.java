@@ -1,12 +1,15 @@
 package com.example.dashboardbackend.controllers;
 
 import com.example.dashboardbackend.dtos.LoginRequest;
+import com.example.dashboardbackend.dtos.StatusResponse;
 import com.example.dashboardbackend.dtos.UserSelectRequest;
 import com.example.dashboardbackend.dtos.UserSelectResponse;
 import com.example.dashboardbackend.dtos.auth.AuthRequest;
 import com.example.dashboardbackend.dtos.auth.AuthResponse;
 import com.example.dashboardbackend.dtos.auth.RegisterRequest;
+import com.example.dashboardbackend.security.jwt.JwtUtils;
 import com.example.dashboardbackend.services.AuthenticationService;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +57,13 @@ public class AuthController {
     ) {
         UserSelectResponse res = authenticationService.selectUser(familyToken, request, response);
         return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<?> getStatus(
+            @CookieValue(value = "auth_token", required = false) String authToken,
+            @CookieValue(value = "family_token", required = false) String familyToken
+    ) {
+        return new ResponseEntity<>(authenticationService.getStatus(authToken, familyToken), HttpStatus.OK);
     }
 }

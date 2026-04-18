@@ -13,12 +13,14 @@ import com.example.dashboardbackend.repositories.UserRepository;
 import com.example.dashboardbackend.security.jwt.JwtUtils;
 import com.example.dashboardbackend.security.principals.FamilyPrincipal;
 import com.example.dashboardbackend.security.principals.UserPrincipal;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import com.example.dashboardbackend.models.User;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -151,5 +153,20 @@ public class AuthenticationService {
                 .maxAge(Duration.ofDays(7))
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
+
+    public String getStatus(String authToken, String familyToken) {
+        if(authToken != null){
+            Claims claims = jwtUtils.extractAllClaims(authToken);
+            String role = claims.get("role", String.class);
+            if("SYSTEM_ADMIN".equals(role)){
+                return "SYSADMIN";
+            }
+            return "USER";
+        }
+        if(familyToken != null && jwtUtils.isValidFamilyToken(familyToken)) {
+            return "FAMILY";
+        }
+        return "NONE";
     }
 }
