@@ -19,6 +19,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
     }
 
+    @ExceptionHandler(FamilyAlreadyExistsException.class)
+    public ResponseEntity<String> handleFamilyAlreadyExistsException(FamilyAlreadyExistsException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneric(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
