@@ -2,6 +2,7 @@ package com.example.dashboardbackend.services;
 
 import com.example.dashboardbackend.dtos.UpdateWidgetConfigRequest;
 import com.example.dashboardbackend.dtos.UpdateWidgetPositionRequest;
+import com.example.dashboardbackend.dtos.WidgetListResponse;
 import com.example.dashboardbackend.dtos.dashboard.WidgetResponse;
 import com.example.dashboardbackend.dtos.weather.WeatherRequest;
 import com.example.dashboardbackend.dtos.widgets.CreateWidgetRequest;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -79,5 +81,32 @@ public class WidgetService {
 
         widgetToUpdate.setWidgetPosition(updateWidgetPositionRequest.widgetPosition());
         widgetItemRepository.save(widgetToUpdate);
+    }
+
+    public List<WidgetListResponse> getWidgets() {
+        return widgetItemRepository.findAll().stream().map(widgetItem ->
+                new WidgetListResponse(
+                        widgetItem.getId(),
+                        widgetItem.getType(),
+                        widgetItem.getWidgetConfig(),
+                        widgetItem.getWidgetPosition(),
+                        widgetItem.getCreatedAt()
+                )
+        ).toList();
+    }
+
+    public List<WidgetListResponse> getWidgetsByFamilyId(Long familyId) {
+        List<WidgetItem> widgetItems = widgetItemRepository.findWidgetItemsByFamilyId(familyId)
+                .orElseThrow(() -> new WidgetNotFoundException("Widget for Family Id " + familyId + " not found"));
+
+        return widgetItems.stream().map(widgetItem ->
+                new WidgetListResponse(
+                        widgetItem.getId(),
+                        widgetItem.getType(),
+                        widgetItem.getWidgetConfig(),
+                        widgetItem.getWidgetPosition(),
+                        widgetItem.getCreatedAt()
+                )
+        ).toList();
     }
 }

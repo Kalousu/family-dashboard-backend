@@ -2,6 +2,8 @@ package com.example.dashboardbackend.controllers;
 
 import com.example.dashboardbackend.dtos.UpdateWidgetConfigRequest;
 import com.example.dashboardbackend.dtos.UpdateWidgetPositionRequest;
+import com.example.dashboardbackend.dtos.WidgetListResponse;
+import com.example.dashboardbackend.dtos.dashboard.WidgetResponse;
 import com.example.dashboardbackend.dtos.widgets.CreateWidgetRequest;
 import com.example.dashboardbackend.services.WidgetService;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +12,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/widgets")
 @RequiredArgsConstructor
 public class WidgetController {
     private final WidgetService widgetService;
+
+    @GetMapping
+    public ResponseEntity<List<WidgetListResponse>> getWidgets(){
+        return new ResponseEntity<>(widgetService.getWidgets(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{familyId}")
+    public ResponseEntity<List<WidgetListResponse>> getWidgetsByFamilyId(
+            @PathVariable Long familyId
+    ){
+        return new ResponseEntity<>(widgetService.getWidgetsByFamilyId(familyId), HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<Object> createWidget(
