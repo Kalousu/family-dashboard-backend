@@ -61,7 +61,8 @@ public class FamilyService {
                         u.getAvatar(),
                         u.getAvatarType(),
                         u.getUserRole(),
-                        u.getPin() != null && !u.getPin().isEmpty()
+                        u.getPin() != null && !u.getPin().isEmpty(),
+                        u.getColor()
                 )).toList()
         );
     }

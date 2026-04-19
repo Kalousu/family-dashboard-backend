@@ -145,7 +145,8 @@ public class AuthenticationService {
                         user.getAvatar(),
                         user.getAvatarType(),
                         user.getUserRole(),
-                        user.getPin() != null && !user.getPin().isEmpty()
+                        user.getPin() != null && !user.getPin().isEmpty(),
+                        user.getColor()
                 ))
                 .toList();
     }

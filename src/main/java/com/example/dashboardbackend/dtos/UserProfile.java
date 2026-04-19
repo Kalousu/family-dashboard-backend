@@ -9,6 +9,7 @@ public record UserProfile(
         String avatar,
         UserAvatarType avatarType,
         UserRole role,
-        boolean hasPin
+        boolean hasPin,
+        String color
 ) {
 }
