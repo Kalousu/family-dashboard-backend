@@ -30,22 +30,25 @@ public class FamilyService {
     private final PasswordEncoder passwordEncoder;
 
     public DashboardResponse getDashboardByFamilyId(Long familyId) {
-        Dashboard dashboard = dashboardRepository.findByFamily_Id(familyId).orElseThrow(() -> new RuntimeException("No dashboard found"));
+        Dashboard dashboard = dashboardRepository.findByFamily_Id(familyId)
+                .orElseThrow(() -> new RuntimeException("No dashboard found for family with id: " + familyId));
 
-        List<WidgetResponse> widgetResponseList = dashboard.getWidgetItems().stream().map(widgetItem -> new WidgetResponse(
-                widgetItem.getId(),
-                widgetItem.getType(),
-                widgetItem.getWidgetConfig(),
-                widgetItem.getWidgetPosition(),
-                widgetItem.getCreatedAt(),
-                widgetService.getWidgetData(widgetItem.getId(), widgetItem.getType(), widgetItem.getWidgetConfig())
-        )).toList();
+        List<WidgetResponse> widgetResponseList = dashboard.getWidgetItems() != null 
+                ? dashboard.getWidgetItems().stream().map(widgetItem -> new WidgetResponse(
+                        widgetItem.getId(),
+                        widgetItem.getType(),
+                        widgetItem.getWidgetConfig(),
+                        widgetItem.getWidgetPosition(),
+                        widgetItem.getCreatedAt(),
+                        widgetService.getWidgetData(widgetItem.getId(), widgetItem.getType(), widgetItem.getWidgetConfig())
+                )).toList()
+                : List.of();
 
         return new DashboardResponse(
                 dashboard.getId(),
                 dashboard.getFamily().getId(),
                 widgetResponseList,
-                null
+                new com.example.dashboardbackend.dtos.dashboard.Permissions(true, true, true, true)
         );
     }
 

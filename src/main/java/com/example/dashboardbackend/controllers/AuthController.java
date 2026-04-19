@@ -51,10 +51,13 @@ public class AuthController {
 
     @PostMapping("/user/login")
     public ResponseEntity<UserSelectResponse> selectUser(
-            @CookieValue("family_token") String familyToken,
+            @CookieValue(value = "family_token", required = false) String familyToken,
             @RequestBody UserSelectRequest request,
             HttpServletResponse response
     ) {
+        if (familyToken == null || familyToken.isEmpty()) {
+            return ResponseEntity.status(401).build();
+        }
         UserSelectResponse res = authenticationService.selectUser(familyToken, request, response);
         return ResponseEntity.ok(res);
     }

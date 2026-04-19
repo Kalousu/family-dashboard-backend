@@ -107,28 +107,34 @@ public class AuthenticationService {
     }
 
     public UserSelectResponse selectUser(String familyToken, UserSelectRequest request, HttpServletResponse response) {
-        if (!jwtUtils.isValidFamilyToken(familyToken)) {
-            throw new BadCredentialsException("Invalid family token");
-        }
-
-        Long familyId = jwtUtils.extractFamilyId(familyToken);
-        User user = userRepository.findById(request.userId())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        if (!user.getFamily().getId().equals(familyId)) {
-            throw new BadCredentialsException("User not in family");
-        }
-
-        if (user.getPin() != null && !user.getPin().isEmpty()) {
-            if (request.pin() == null ||
-                    !passwordEncoder.matches(request.pin(), user.getPin())) {
-                throw new BadCredentialsException("Invalid PIN");
+        try {
+            if (!jwtUtils.isValidFamilyToken(familyToken)) {
+                throw new BadCredentialsException("Invalid family token");
             }
-        }
 
-        String token = jwtUtils.generateUserToken(user);
-        addCookie(response, "auth_token", token);
-        return new UserSelectResponse(user.getId(), user.getUserRole());
+            Long familyId = jwtUtils.extractFamilyId(familyToken);
+            User user = userRepository.findById(request.userId())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+            if (!user.getFamily().getId().equals(familyId)) {
+                throw new BadCredentialsException("User not in family");
+            }
+
+            if (user.getPin() != null && !user.getPin().isEmpty()) {
+                if (request.pin() == null ||
+                        !passwordEncoder.matches(request.pin(), user.getPin())) {
+                    throw new BadCredentialsException("Invalid PIN");
+                }
+            }
+
+            String token = jwtUtils.generateUserToken(user);
+            addCookie(response, "auth_token", token);
+            return new UserSelectResponse(user.getId(), user.getUserRole());
+        } catch (Exception e) {
+            System.err.println("Error in selectUser: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     private List<UserProfile> getProfiles(Long familyId) {
@@ -147,10 +153,9 @@ public class AuthenticationService {
     private void addCookie(HttpServletResponse response, String key, String value) {
         ResponseCookie cookie = ResponseCookie.from(key, value)
                 .httpOnly(true)
-                .secure(false)  // Changed to false for local development (HTTP)
+                .secure(false)  // false for local development (HTTP)
                 .path("/")
-                .sameSite("None")  // Changed to None to allow cross-origin
-                .domain("localhost")  // Set domain to localhost for both ports
+                .sameSite("Lax")  // Changed to Lax for same-site requests in development
                 .maxAge(Duration.ofDays(7))
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());

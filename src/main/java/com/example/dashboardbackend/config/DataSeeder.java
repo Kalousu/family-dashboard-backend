@@ -64,7 +64,7 @@ public class DataSeeder {
                 weatherSettings.put("longitude", 8.46694);
                 weatherSettings.put("timezone", "Europe/Berlin");
 
-                WidgetPosition weatherWidgetPosition = new WidgetPosition("0", "0", "2", "2");
+                WidgetPosition weatherWidgetPosition = new WidgetPosition("0", "0", "3", "4");
                 weatherWidget.setWidgetPosition(weatherWidgetPosition);
 
                 weatherWidget.setWidgetConfig(new WidgetConfig(
