@@ -176,4 +176,15 @@ public class AuthenticationService {
         }
         return new StatusResponse("NONE");
     }
+
+    public void logoutUser(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("auth_token", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .sameSite("Lax")
+                .maxAge(0)  // Delete cookie
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
 }
