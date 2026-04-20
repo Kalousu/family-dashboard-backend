@@ -36,10 +36,16 @@ public class WidgetService {
     }
 
     private Object getWeatherData(WidgetConfig config) {
+        if (config == null || config.settings() == null) {
+            return null;
+        }
         return weatherService.getWeather(buildWeatherRequest(config.settings()));
     }
 
     private WeatherRequest buildWeatherRequest(Map<String, Object> settings) {
+        if (settings == null) {
+            return null;
+        }
         return new WeatherRequest(
                 ((Number) settings.get("latitude")).doubleValue(),
                 ((Number) settings.get("longitude")).doubleValue(),
