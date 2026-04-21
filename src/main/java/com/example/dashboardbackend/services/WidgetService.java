@@ -27,10 +27,12 @@ public class WidgetService {
     private final WeatherService weatherService;
     private final DashboardRepository dashboardRepository;
     private final WidgetItemRepository widgetItemRepository;
+    private final PictureService pictureService;
 
     public Object getWidgetData(Long widgetId, String type, WidgetConfig config) {
         return switch (type) {
             case "weather" -> getWeatherData(config);
+            case "picture" -> getPictureData(widgetId);
             default -> null;
         };
     }
@@ -38,6 +40,15 @@ public class WidgetService {
     private Object getWeatherData(WidgetConfig config) {
         return weatherService.getWeather(buildWeatherRequest(config.settings()));
     }
+
+    private Object getPictureData(Long widgetId) {
+        try {
+            return pictureService.getPicture(widgetId);
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
 
     private WeatherRequest buildWeatherRequest(Map<String, Object> settings) {
         return new WeatherRequest(

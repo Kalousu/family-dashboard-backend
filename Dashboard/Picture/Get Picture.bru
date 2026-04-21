@@ -1,0 +1,15 @@
+meta {
+  name: Get Picture
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8080/api/widgets/picture/1
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
