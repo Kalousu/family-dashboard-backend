@@ -187,4 +187,15 @@ public class AuthenticationService {
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
+
+    public void logoutFamily(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("family_token", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .sameSite("Lax")
+                .maxAge(0)  // Delete cookie
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
 }

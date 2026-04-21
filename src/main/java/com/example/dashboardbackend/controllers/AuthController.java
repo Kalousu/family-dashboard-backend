@@ -75,4 +75,10 @@ public class AuthController {
         authenticationService.logoutUser(response);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/logout/family")
+    public ResponseEntity<Void> logoutFamily(HttpServletResponse response) {
+        authenticationService.logoutFamily(response);
+        return ResponseEntity.ok().build();
+    }
 }
