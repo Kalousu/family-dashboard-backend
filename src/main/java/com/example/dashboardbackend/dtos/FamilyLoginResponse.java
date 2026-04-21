@@ -3,8 +3,8 @@ package com.example.dashboardbackend.dtos;
 import java.util.List;
 
 public record FamilyLoginResponse(
-        String token,
+        Long familyId,
         List<UserProfile> profiles,
-        String type
+        String role
 ) {
 }

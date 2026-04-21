@@ -1,0 +1,15 @@
+meta {
+  name: Get Role From Cookies
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{apiUrl}}/auth/status
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

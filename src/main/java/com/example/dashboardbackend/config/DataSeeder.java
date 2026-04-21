@@ -42,10 +42,13 @@ public class DataSeeder {
                 sysUser.setAvatarType(UserAvatarType.URL);
 
                 User user1 = new User();
-                user1.setName("User1");
+                user1.setName("Kevin");
                 user1.setPassword(passwordEncoder.encode("123"));
                 user1.setEmail("user1@example.com");
+                user1.setAvatarType(UserAvatarType.URL);
+                user1.setAvatar("https://pub-3450ee438ead45c7bddcf1803d1fc37f.r2.dev/images/06cdc993-f91b-41c4-83d0-977ce9dc1304-dekter.jpeg");
                 user1.setFamily(family1);
+                user1.setColor("red");
                 user1.setUserRole(UserRole.USER);
 
                 Dashboard dashboard1 = new Dashboard();
@@ -61,7 +64,7 @@ public class DataSeeder {
                 weatherSettings.put("longitude", 8.46694);
                 weatherSettings.put("timezone", "Europe/Berlin");
 
-                WidgetPosition weatherWidgetPosition = new WidgetPosition("0", "0", "2", "2");
+                WidgetPosition weatherWidgetPosition = new WidgetPosition("0", "0", "3", "4");
                 weatherWidget.setWidgetPosition(weatherWidgetPosition);
 
                 weatherWidget.setWidgetConfig(new WidgetConfig(

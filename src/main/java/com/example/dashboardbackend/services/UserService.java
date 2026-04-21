@@ -31,7 +31,8 @@ public class UserService {
                     user.getAvatar(),
                     user.getAvatarType(),
                     user.getColor(),
-                    user.getUserColorMode()
+                    user.getUserColorMode(),
+                    user.getPin() != null && !user.getPin().isEmpty()
             )
         ).toList();
     }
@@ -43,11 +44,12 @@ public class UserService {
                 user.getId(),
                 user.getName(),
                 user.getUserRole(),
-                user.getFamily().getId(),
+                user.getFamily() != null ? user.getFamily().getId() : null,
                 user.getAvatar(),
                 user.getAvatarType(),
                 user.getColor(),
-                user.getUserColorMode()
+                user.getUserColorMode(),
+                user.getPin() != null && !user.getPin().isEmpty()
         );
     }
 
@@ -57,11 +59,12 @@ public class UserService {
             user.getId(),
             user.getName(),
             user.getUserRole(),
-            user.getFamily().getId(),
+            user.getFamily() != null ? user.getFamily().getId() : null,
             user.getAvatar(),
             user.getAvatarType(),
             user.getColor(),
-            user.getUserColorMode()
+            user.getUserColorMode(),
+            user.getPin() != null && !user.getPin().isEmpty()
         );
     }
 

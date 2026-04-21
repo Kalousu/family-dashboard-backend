@@ -7,11 +7,12 @@ import com.example.dashboardbackend.models.enums.UserColorMode;
 public record UserResponse(
         Long id,
         String name,
-        UserRole userRole,
+        UserRole role,  // Changed from userRole to role
         Long familyId,
         String avatar,
         UserAvatarType avatarType,
         String pfpColour,
-        UserColorMode userColorMode
+        UserColorMode userColorMode,
+        boolean hasPin  // Added hasPin field
 ) {
 }
