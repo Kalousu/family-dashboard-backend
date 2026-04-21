@@ -1,4 +1,4 @@
-package com.example.dashboardbackend.dtos;
+package com.example.dashboardbackend.dtos.auth;
 
 public record SysAdminLoginResponse(
         String token,

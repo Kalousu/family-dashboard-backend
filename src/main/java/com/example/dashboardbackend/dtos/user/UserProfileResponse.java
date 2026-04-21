@@ -1,9 +1,9 @@
-package com.example.dashboardbackend.dtos;
+package com.example.dashboardbackend.dtos.user;
 
 import com.example.dashboardbackend.models.enums.UserAvatarType;
 import com.example.dashboardbackend.models.enums.UserRole;
 
-public record UserProfile(
+public record UserProfileResponse(
         Long id,
         String name,
         String avatar,

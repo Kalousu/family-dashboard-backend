@@ -1,4 +1,4 @@
-package com.example.dashboardbackend.models.widgets;
+package com.example.dashboardbackend.models.widgets.general;
 
 import com.example.dashboardbackend.models.Dashboard;
 import jakarta.persistence.*;

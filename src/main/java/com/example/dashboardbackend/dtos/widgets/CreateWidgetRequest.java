@@ -1,7 +1,7 @@
 package com.example.dashboardbackend.dtos.widgets;
 
-import com.example.dashboardbackend.models.widgets.WidgetConfig;
-import com.example.dashboardbackend.models.widgets.WidgetPosition;
+import com.example.dashboardbackend.models.widgets.general.WidgetConfig;
+import com.example.dashboardbackend.models.widgets.general.WidgetPosition;
 
 public record CreateWidgetRequest(
         Long dashboardId,

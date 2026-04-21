@@ -1,4 +1,4 @@
-package com.example.dashboardbackend.dtos;
+package com.example.dashboardbackend.dtos.user;
 
 import com.example.dashboardbackend.models.enums.UserRole;
 import com.example.dashboardbackend.models.enums.UserAvatarType;

@@ -1,14 +1,13 @@
 package com.example.dashboardbackend.controllers;
 
-import com.example.dashboardbackend.dtos.LoginRequest;
-import com.example.dashboardbackend.dtos.UserSelectRequest;
-import com.example.dashboardbackend.dtos.UserSelectResponse;
+import com.example.dashboardbackend.dtos.auth.LoginRequest;
+import com.example.dashboardbackend.dtos.user.UserSelectRequest;
+import com.example.dashboardbackend.dtos.user.UserSelectResponse;
 import com.example.dashboardbackend.dtos.auth.AuthRequest;
 import com.example.dashboardbackend.dtos.auth.AuthResponse;
 import com.example.dashboardbackend.dtos.auth.RegisterRequest;
 import com.example.dashboardbackend.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

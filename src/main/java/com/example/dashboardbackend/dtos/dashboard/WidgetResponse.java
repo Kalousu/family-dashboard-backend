@@ -1,7 +1,7 @@
 package com.example.dashboardbackend.dtos.dashboard;
 
-import com.example.dashboardbackend.models.widgets.WidgetConfig;
-import com.example.dashboardbackend.models.widgets.WidgetPosition;
+import com.example.dashboardbackend.models.widgets.general.WidgetConfig;
+import com.example.dashboardbackend.models.widgets.general.WidgetPosition;
 
 import java.time.LocalDateTime;
 

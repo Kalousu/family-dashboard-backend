@@ -1,6 +1,6 @@
 package com.example.dashboardbackend.models.widgets.picture;
 
-import com.example.dashboardbackend.models.widgets.WidgetItem;
+import com.example.dashboardbackend.models.widgets.general.WidgetItem;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,13 +1,11 @@
 package com.example.dashboardbackend.controllers;
 
-import com.example.dashboardbackend.dtos.UpdateWidgetConfigRequest;
-import com.example.dashboardbackend.dtos.UpdateWidgetPositionRequest;
-import com.example.dashboardbackend.dtos.WidgetListResponse;
-import com.example.dashboardbackend.dtos.dashboard.WidgetResponse;
+import com.example.dashboardbackend.dtos.widgets.UpdateWidgetConfigRequest;
+import com.example.dashboardbackend.dtos.widgets.UpdateWidgetPositionRequest;
+import com.example.dashboardbackend.dtos.widgets.WidgetListResponse;
 import com.example.dashboardbackend.dtos.widgets.CreateWidgetRequest;
 import com.example.dashboardbackend.services.WidgetService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,13 +1,11 @@
 package com.example.dashboardbackend.services;
 
-import com.example.dashboardbackend.dtos.MediaUploadRequest;
 import com.example.dashboardbackend.exceptions.FileUploadException;
 import com.example.dashboardbackend.exceptions.UnsupportedMediaTypeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.UnsupportedMediaTypeStatusException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;

@@ -1,12 +1,9 @@
 package com.example.dashboardbackend.controllers;
 
-import com.example.dashboardbackend.dtos.ChangeUserRoleRequest;
-import com.example.dashboardbackend.dtos.UserResponse;
-import com.example.dashboardbackend.models.User;
-import com.example.dashboardbackend.models.enums.UserRole;
+import com.example.dashboardbackend.dtos.user.ChangeUserRoleRequest;
+import com.example.dashboardbackend.dtos.user.UserResponse;
 import com.example.dashboardbackend.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

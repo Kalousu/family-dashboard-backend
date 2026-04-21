@@ -1,6 +1,6 @@
 package com.example.dashboardbackend.models;
 
-import com.example.dashboardbackend.models.widgets.WidgetItem;
+import com.example.dashboardbackend.models.widgets.general.WidgetItem;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

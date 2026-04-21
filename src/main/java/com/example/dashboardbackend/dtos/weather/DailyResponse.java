@@ -3,7 +3,7 @@ package com.example.dashboardbackend.dtos.weather;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public record Daily(
+public record DailyResponse(
     @JsonProperty("time") List<String> dates,
     @JsonProperty("temperature_2m_max") List<Double> maxTemperatures,
     @JsonProperty("windspeed_10m_max") List<Double> maxWindSpeeds,

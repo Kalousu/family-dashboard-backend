@@ -1,4 +1,4 @@
-package com.example.dashboardbackend.dtos;
+package com.example.dashboardbackend.dtos.family;
 
 public record UpdateFamilyNameRequest(
         String familyName

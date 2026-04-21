@@ -1,4 +1,4 @@
-package com.example.dashboardbackend.models.widgets;
+package com.example.dashboardbackend.models.widgets.general;
 
 import java.util.Map;
 

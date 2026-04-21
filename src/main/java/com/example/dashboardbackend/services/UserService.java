@@ -1,20 +1,16 @@
 package com.example.dashboardbackend.services;
 
-import com.example.dashboardbackend.dtos.ChangeUserRoleRequest;
-import com.example.dashboardbackend.dtos.UserResponse;
+import com.example.dashboardbackend.dtos.user.ChangeUserRoleRequest;
+import com.example.dashboardbackend.dtos.user.UserResponse;
 import com.example.dashboardbackend.exceptions.UnauthorizedException;
 import com.example.dashboardbackend.models.User;
 import com.example.dashboardbackend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import lombok.Getter;
 
 @Service
 @RequiredArgsConstructor
