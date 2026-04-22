@@ -63,7 +63,8 @@ public class AuthenticationService {
                 .orElseThrow(() -> new FamilyNotFoundException("Family for User " + request.name() + " not found"));
         
         // Check if this is the first user for the family
-        boolean isFirstUser = userRepository.findByFamilyId(request.familyId()).isEmpty();
+        List<User> existingUsers = userRepository.findByFamilyId(request.familyId());
+        boolean isFirstUser = existingUsers.isEmpty();
         
         var user = new User();
 
@@ -71,7 +72,8 @@ public class AuthenticationService {
         user.setPassword(null);
         user.setPin(request.pin() != null ? passwordEncoder.encode(request.pin()) : null);
         // First user becomes FAMILY_ADMIN, others are USER
-        user.setUserRole(isFirstUser ? UserRole.FAMILY_ADMIN : UserRole.USER);
+        UserRole assignedRole = isFirstUser ? UserRole.FAMILY_ADMIN : UserRole.USER;
+        user.setUserRole(assignedRole);
         user.setFamily(family);
         user.setAvatar(avatarURI);
         user.setAvatarType(avatarType);

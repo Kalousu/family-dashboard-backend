@@ -13,6 +13,7 @@ import com.example.dashboardbackend.models.widgets.WidgetItem;
 import com.example.dashboardbackend.repositories.DashboardRepository;
 import com.example.dashboardbackend.repositories.WidgetItemRepository;
 import com.example.dashboardbackend.repositories.TodoRepository;
+import com.example.dashboardbackend.repositories.CalendarEventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class WidgetService {
     private final DashboardRepository dashboardRepository;
     private final WidgetItemRepository widgetItemRepository;
     private final TodoRepository todoRepository;
+    private final CalendarEventRepository calendarEventRepository;
     private final PictureService pictureService;
     private final CalendarEventService calendarEventService;
     private final TimetableService timetableService;
@@ -102,9 +104,11 @@ public class WidgetService {
         WidgetItem widgetToDelete = widgetItemRepository.findById(widgetId)
                 .orElseThrow(() -> new WidgetNotFoundException("Widget you tried to delete not found"));
 
-        // Delete all related todo items first to avoid foreign key constraint violation
+        // Delete all related items first to avoid foreign key constraint violation
         if ("todo".equals(widgetToDelete.getType())) {
             todoRepository.deleteByWidgetItem_Id(widgetId);
+        } else if ("calendar".equals(widgetToDelete.getType())) {
+            calendarEventRepository.deleteByWidgetItem_Id(widgetId);
         }
 
         widgetItemRepository.delete(widgetToDelete);

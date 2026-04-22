@@ -13,7 +13,7 @@ public record UserResponse(
         Long familyId,
         String avatar,
         UserAvatarType avatarType,
-        String pfpColour,
+        String color,
         UserColorMode userColorMode,
         boolean hasPin  // Added hasPin field
 ) {

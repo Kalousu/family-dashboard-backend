@@ -8,4 +8,5 @@ import java.util.List;
 public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Long> {
   List<CalendarEvent> findByWidgetItem_Id(Long widgetId);
   int countByWidgetItem_IdAndDate(Long widgetId, LocalDate date);
+  void deleteByWidgetItem_Id(Long widgetId);
 }
