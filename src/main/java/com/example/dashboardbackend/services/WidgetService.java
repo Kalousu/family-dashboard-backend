@@ -1,9 +1,8 @@
 package com.example.dashboardbackend.services;
 
-import com.example.dashboardbackend.dtos.UpdateWidgetConfigRequest;
-import com.example.dashboardbackend.dtos.UpdateWidgetPositionRequest;
-import com.example.dashboardbackend.dtos.WidgetListResponse;
-import com.example.dashboardbackend.dtos.dashboard.WidgetResponse;
+import com.example.dashboardbackend.dtos.widgets.UpdateWidgetConfigRequest;
+import com.example.dashboardbackend.dtos.widgets.UpdateWidgetPositionRequest;
+import com.example.dashboardbackend.dtos.widgets.WidgetListResponse;
 import com.example.dashboardbackend.dtos.weather.WeatherRequest;
 import com.example.dashboardbackend.dtos.widgets.CreateWidgetRequest;
 import com.example.dashboardbackend.exceptions.DashboardNotFoundException;
@@ -14,7 +13,6 @@ import com.example.dashboardbackend.models.widgets.WidgetItem;
 import com.example.dashboardbackend.repositories.DashboardRepository;
 import com.example.dashboardbackend.repositories.WidgetItemRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

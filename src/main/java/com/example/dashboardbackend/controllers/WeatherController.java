@@ -2,7 +2,7 @@
 
 package com.example.dashboardbackend.controllers;
 
-import com.example.dashboardbackend.dtos.weather.GeoLocation;
+import com.example.dashboardbackend.dtos.weather.GeoLocationResponse;
 import com.example.dashboardbackend.dtos.weather.WeatherRequest;
 import com.example.dashboardbackend.dtos.weather.WeatherResponse;
 import com.example.dashboardbackend.services.WeatherService;
@@ -32,7 +32,7 @@ public class WeatherController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<GeoLocation>> searchCities(
+    public ResponseEntity<List<GeoLocationResponse>> searchCities(
             @RequestParam String city
     ) {
         return new ResponseEntity<>(weatherService.searchCities(city), HttpStatus.OK);

@@ -1,13 +1,11 @@
 package com.example.dashboardbackend.services;
 
-import com.example.dashboardbackend.dtos.weather.GeoLocation;
 import com.example.dashboardbackend.dtos.weather.GeoLocationResponse;
+import com.example.dashboardbackend.dtos.weather.GeoLocationListResponse;
 import com.example.dashboardbackend.dtos.weather.WeatherRequest;
 import com.example.dashboardbackend.dtos.weather.WeatherResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -30,12 +28,12 @@ public class WeatherService {
                 .body(WeatherResponse.class);
     }
 
-    public List<GeoLocation> searchCities(String city) {
-        GeoLocationResponse geo = restClient.get()
-                .uri("https://geocoding-api.open-meteo.com/v1/search" +
+    public List<GeoLocationResponse> searchCities(String city) {
+        GeoLocationListResponse geo = restClient.get()
+                                                .uri("https://geocoding-api.open-meteo.com/v1/search" +
                         "?name={city}&count=5&language=de&format=json", city)
-                .retrieve()
-                .body(GeoLocationResponse.class);
+                                                .retrieve()
+                                                .body(GeoLocationListResponse.class);
 
         if (geo == null || geo.results() == null) return List.of();
         return geo.results();
