@@ -1,9 +1,11 @@
 package com.example.dashboardbackend.services;
 
-import com.example.dashboardbackend.dtos.*;
-import com.example.dashboardbackend.dtos.auth.AuthRequest;
-import com.example.dashboardbackend.dtos.auth.AuthResponse;
-import com.example.dashboardbackend.dtos.auth.RegisterRequest;
+import com.example.dashboardbackend.dtos.auth.*;
+import com.example.dashboardbackend.dtos.dashboard.StatusResponse;
+import com.example.dashboardbackend.dtos.family.FamilyLoginResponse;
+import com.example.dashboardbackend.dtos.user.UserProfileResponse;
+import com.example.dashboardbackend.dtos.user.UserSelectRequest;
+import com.example.dashboardbackend.dtos.user.UserSelectResponse;
 import com.example.dashboardbackend.exceptions.FamilyNotFoundException;
 import com.example.dashboardbackend.models.Family;
 import com.example.dashboardbackend.models.enums.UserAvatarType;
@@ -20,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import com.example.dashboardbackend.models.User;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -99,7 +100,7 @@ public class AuthenticationService {
             Family family = familyPrincipal.getFamily();
             String token = jwtUtils.generateFamilyToken(family);
             addCookie(response, "family_token", token);
-            List<UserProfile> profiles = getProfiles(family.getId());
+            List<UserProfileResponse> profiles = getProfiles(family.getId());
             return new FamilyLoginResponse(family.getId(), profiles, "FAMILY");
         }
 
@@ -137,9 +138,9 @@ public class AuthenticationService {
         }
     }
 
-    private List<UserProfile> getProfiles(Long familyId) {
+    private List<UserProfileResponse> getProfiles(Long familyId) {
         return userRepository.findByFamilyId(familyId).stream()
-                .map(user -> new UserProfile(
+                .map(user -> new UserProfileResponse(
                         user.getId(),
                         user.getName(),
                         user.getAvatar(),

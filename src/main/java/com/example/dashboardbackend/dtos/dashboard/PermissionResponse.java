@@ -1,6 +1,6 @@
 package com.example.dashboardbackend.dtos.dashboard;
 
-public record Permissions(
+public record PermissionResponse(
         boolean canEditLayout,
         boolean canAddWidgets,
         boolean canDeleteWidgets,

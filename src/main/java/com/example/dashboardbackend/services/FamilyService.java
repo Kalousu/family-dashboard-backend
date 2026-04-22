@@ -1,8 +1,13 @@
 package com.example.dashboardbackend.services;
 
-import com.example.dashboardbackend.dtos.*;
 import com.example.dashboardbackend.dtos.dashboard.DashboardResponse;
+import com.example.dashboardbackend.dtos.dashboard.PermissionResponse;
 import com.example.dashboardbackend.dtos.dashboard.WidgetResponse;
+import com.example.dashboardbackend.dtos.family.CreateFamilyRequest;
+import com.example.dashboardbackend.dtos.family.FamilyResponse;
+import com.example.dashboardbackend.dtos.family.UpdateFamilyNameRequest;
+import com.example.dashboardbackend.dtos.user.UserProfileResponse;
+import com.example.dashboardbackend.dtos.user.UserSelectPageResponse;
 import com.example.dashboardbackend.exceptions.FamilyAlreadyExistsException;
 import com.example.dashboardbackend.exceptions.FamilyNotFoundException;
 import com.example.dashboardbackend.models.Dashboard;
@@ -12,7 +17,6 @@ import com.example.dashboardbackend.repositories.DashboardRepository;
 import com.example.dashboardbackend.repositories.FamilyRepository;
 import com.example.dashboardbackend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,14 +52,14 @@ public class FamilyService {
                 dashboard.getId(),
                 dashboard.getFamily().getId(),
                 widgetResponseList,
-                new com.example.dashboardbackend.dtos.dashboard.Permissions(true, true, true, true)
+                new PermissionResponse(true, true, true, true)
         );
     }
 
     public UserSelectPageResponse getUsersForFamily(Long familyId) {
         List<User> users = userRepository.findByFamilyId(familyId);
         return new UserSelectPageResponse(
-                users.stream().map(u -> new UserProfile(
+                users.stream().map(u -> new UserProfileResponse(
                         u.getId(),
                         u.getName(),
                         u.getAvatar(),
