@@ -18,7 +18,7 @@ public class TodoService {
 
     public List<TodoItemResponse> getTodosByWidgetId(Long widgetId) {
         List<TodoItem> items = todoRepository.findTodoItemsByWidgetItem_Id(widgetId)
-                .orElseThrow(() -> new RuntimeException("Todo-Items for id " + widgetId + " not found"));
+                .orElse(List.of()); // Return empty list if no todos exist for this widget
 
         List<TodoItemResponse> listResponse = items.stream().map(item -> new TodoItemResponse(
                 item.getId(),

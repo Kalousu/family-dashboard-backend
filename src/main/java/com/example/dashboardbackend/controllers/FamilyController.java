@@ -2,6 +2,7 @@ package com.example.dashboardbackend.controllers;
 
 import com.example.dashboardbackend.dtos.dashboard.DashboardResponse;
 import com.example.dashboardbackend.dtos.family.CreateFamilyRequest;
+import com.example.dashboardbackend.dtos.family.CreateFamilyResponse;
 import com.example.dashboardbackend.dtos.family.FamilyResponse;
 import com.example.dashboardbackend.dtos.family.UpdateFamilyNameRequest;
 import com.example.dashboardbackend.dtos.user.UserSelectPageResponse;
@@ -9,6 +10,7 @@ import com.example.dashboardbackend.services.FamilyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,8 +34,11 @@ public class FamilyController {
     }
 
     @GetMapping("/{familyId}/dashboard")
-    public ResponseEntity<DashboardResponse> getDashboardForFamily(@PathVariable Long familyId) {
-        return new ResponseEntity<>(familyService.getDashboardByFamilyId(familyId), HttpStatus.OK);
+    public ResponseEntity<DashboardResponse> getDashboardForFamily(
+            @PathVariable Long familyId,
+            Authentication authentication
+    ) {
+        return new ResponseEntity<>(familyService.getDashboardByFamilyId(familyId, authentication), HttpStatus.OK);
     }
 
     @GetMapping("{familyId}/users")
@@ -51,11 +56,11 @@ public class FamilyController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createFamily(
+    public ResponseEntity<CreateFamilyResponse> createFamily(
             @RequestBody CreateFamilyRequest createFamilyRequest
     ) {
-        familyService.createFamily(createFamilyRequest);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        CreateFamilyResponse response = familyService.createFamily(createFamilyRequest);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{familyId}")

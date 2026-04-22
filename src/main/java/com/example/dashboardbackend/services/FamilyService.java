@@ -4,20 +4,25 @@ import com.example.dashboardbackend.dtos.dashboard.DashboardResponse;
 import com.example.dashboardbackend.dtos.dashboard.PermissionResponse;
 import com.example.dashboardbackend.dtos.dashboard.WidgetResponse;
 import com.example.dashboardbackend.dtos.family.CreateFamilyRequest;
+import com.example.dashboardbackend.dtos.family.CreateFamilyResponse;
 import com.example.dashboardbackend.dtos.family.FamilyResponse;
 import com.example.dashboardbackend.dtos.family.UpdateFamilyNameRequest;
 import com.example.dashboardbackend.dtos.user.UserProfileResponse;
+import com.example.dashboardbackend.dtos.user.UserResponse;
 import com.example.dashboardbackend.dtos.user.UserSelectPageResponse;
 import com.example.dashboardbackend.exceptions.FamilyAlreadyExistsException;
 import com.example.dashboardbackend.exceptions.FamilyNotFoundException;
 import com.example.dashboardbackend.models.Dashboard;
 import com.example.dashboardbackend.models.Family;
 import com.example.dashboardbackend.models.User;
+import com.example.dashboardbackend.models.enums.UserRole;
 import com.example.dashboardbackend.repositories.DashboardRepository;
 import com.example.dashboardbackend.repositories.FamilyRepository;
 import com.example.dashboardbackend.repositories.UserRepository;
+import com.example.dashboardbackend.security.principals.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +38,17 @@ public class FamilyService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public DashboardResponse getDashboardByFamilyId(Long familyId) {
+    public DashboardResponse getDashboardByFamilyId(Long familyId, Authentication authentication) {
         Dashboard dashboard = dashboardRepository.findByFamily_Id(familyId)
-                .orElseThrow(() -> new RuntimeException("No dashboard found for family with id: " + familyId));
+                .orElseGet(() -> {
+                    // Create a new dashboard if none exists for this family
+                    Family family = familyRepository.findById(familyId)
+                            .orElseThrow(() -> new FamilyNotFoundException("Family with id " + familyId + " not found"));
+                    
+                    Dashboard newDashboard = new Dashboard();
+                    newDashboard.setFamily(family);
+                    return dashboardRepository.save(newDashboard);
+                });
 
         List<WidgetResponse> widgetResponseList = dashboard.getWidgetItems() != null 
                 ? dashboard.getWidgetItems().stream().map(widgetItem -> new WidgetResponse(
@@ -48,12 +61,69 @@ public class FamilyService {
                 )).toList()
                 : List.of();
 
+        // Determine permissions based on user role
+        PermissionResponse permissions = getPermissionsForUser(authentication);
+        
+        // Get current user data
+        UserResponse currentUser = getCurrentUser(authentication);
+
         return new DashboardResponse(
                 dashboard.getId(),
                 dashboard.getFamily().getId(),
                 widgetResponseList,
-                new PermissionResponse(true, true, true, true)
+                permissions,
+                currentUser
         );
+    }
+
+    private PermissionResponse getPermissionsForUser(Authentication authentication) {
+        System.out.println("DEBUG: Authentication object: " + authentication);
+        if (authentication != null) {
+            System.out.println("DEBUG: Authentication name: " + authentication.getName());
+            System.out.println("DEBUG: Principal type: " + authentication.getPrincipal().getClass().getSimpleName());
+            System.out.println("DEBUG: Principal: " + authentication.getPrincipal());
+        }
+        
+        if (authentication != null && authentication.getPrincipal() instanceof UserPrincipal userPrincipal) {
+            User user = userPrincipal.getUser();
+            UserRole role = user.getUserRole();
+            
+            System.out.println("DEBUG: User " + user.getName() + " has role: " + role);
+            
+            // FAMILY_ADMIN has full permissions, USER has read-only
+            boolean isAdmin = role == UserRole.FAMILY_ADMIN || role == UserRole.SYSTEM_ADMIN;
+            
+            System.out.println("DEBUG: isAdmin = " + isAdmin);
+            
+            return new PermissionResponse(
+                    isAdmin, // canEditLayout
+                    isAdmin, // canAddWidgets  
+                    isAdmin, // canDeleteWidgets
+                    true     // canEditWidgetData - both roles can edit widget content
+            );
+        }
+        
+        System.out.println("DEBUG: No authentication or wrong principal type");
+        // Default to read-only if no authentication
+        return new PermissionResponse(false, false, false, true);
+    }
+
+    private UserResponse getCurrentUser(Authentication authentication) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserPrincipal userPrincipal) {
+            User user = userPrincipal.getUser();
+            return new UserResponse(
+                    user.getId(),
+                    user.getName(),
+                    user.getUserRole(),
+                    user.getFamily() != null ? user.getFamily().getId() : null,
+                    user.getAvatar(),
+                    user.getAvatarType(),
+                    user.getColor(),
+                    user.getUserColorMode(),
+                    user.getPin() != null && !user.getPin().isEmpty()
+            );
+        }
+        return null;
     }
 
     public UserSelectPageResponse getUsersForFamily(Long familyId) {
@@ -71,14 +141,15 @@ public class FamilyService {
         );
     }
 
-    public void createFamily(CreateFamilyRequest createFamilyRequest) {
+    public CreateFamilyResponse createFamily(CreateFamilyRequest createFamilyRequest) {
         var family = new Family();
         family.setFamilyName(createFamilyRequest.familyName());
         family.setPassword(passwordEncoder.encode(createFamilyRequest.password()));
         family.setEmail(createFamilyRequest.email());
 
         try{
-            familyRepository.save(family);
+            Family savedFamily = familyRepository.save(family);
+            return new CreateFamilyResponse(savedFamily.getId(), savedFamily.getFamilyName());
         }catch(DataIntegrityViolationException e){
             throw new FamilyAlreadyExistsException(createFamilyRequest.familyName());
         }

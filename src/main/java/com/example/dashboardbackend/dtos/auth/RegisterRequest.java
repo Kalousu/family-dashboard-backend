@@ -5,6 +5,7 @@ public record RegisterRequest(
         String pin,
         String email,
         Long familyId,
-        String pfpIcon
+        String pfpIcon,
+        String color
 ) {
 }

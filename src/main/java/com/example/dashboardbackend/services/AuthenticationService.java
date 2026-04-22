@@ -9,6 +9,7 @@ import com.example.dashboardbackend.dtos.user.UserSelectResponse;
 import com.example.dashboardbackend.exceptions.FamilyNotFoundException;
 import com.example.dashboardbackend.models.Family;
 import com.example.dashboardbackend.models.enums.UserAvatarType;
+import com.example.dashboardbackend.models.enums.UserColorMode;
 import com.example.dashboardbackend.models.enums.UserRole;
 import com.example.dashboardbackend.repositories.FamilyRepository;
 import com.example.dashboardbackend.repositories.UserRepository;
@@ -45,7 +46,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final MediaService mediaService;
 
-    public AuthResponse register(RegisterRequest request, MultipartFile avatar) {
+    public AuthResponse register(RegisterRequest request, MultipartFile avatar, HttpServletResponse response) {
         String avatarURI;
         UserAvatarType avatarType;
 
@@ -58,19 +59,35 @@ public class AuthenticationService {
             avatarType = UserAvatarType.ICON;
         }
 
+        Family family = familyRepository.findById(request.familyId())
+                .orElseThrow(() -> new FamilyNotFoundException("Family for User " + request.name() + " not found"));
+        
+        // Check if this is the first user for the family
+        boolean isFirstUser = userRepository.findByFamilyId(request.familyId()).isEmpty();
+        
         var user = new User();
 
         user.setName(request.name());
         user.setPassword(null);
         user.setPin(request.pin() != null ? passwordEncoder.encode(request.pin()) : null);
-        user.setUserRole(UserRole.USER);
-        user.setFamily(familyRepository.findById(request.familyId())
-                .orElseThrow(() -> new FamilyNotFoundException("Family for User " + request.name() + " not found")));
+        // First user becomes FAMILY_ADMIN, others are USER
+        user.setUserRole(isFirstUser ? UserRole.FAMILY_ADMIN : UserRole.USER);
+        user.setFamily(family);
         user.setAvatar(avatarURI);
         user.setAvatarType(avatarType);
+        user.setColor(request.color() != null ? request.color() : "#3B82F6"); // Use provided color or default
+        user.setUserColorMode(UserColorMode.LIGHT); // Default color mode
 
-        userRepository.save(user);
-        String jwtToken = jwtUtils.generateUserToken(user);
+        User savedUser = userRepository.save(user);
+        String jwtToken = jwtUtils.generateUserToken(savedUser);
+        
+        // Set auth cookie for immediate authentication
+        addCookie(response, "auth_token", jwtToken);
+        
+        // Also set family token so user can login again after logout
+        String familyToken = jwtUtils.generateFamilyToken(family);
+        addCookie(response, "family_token", familyToken);
+        
         return new AuthResponse(jwtToken);
     }
 
