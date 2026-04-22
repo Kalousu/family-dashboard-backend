@@ -52,6 +52,7 @@ public class JwtUtils {
 
     public String generateUserToken(User user){
         JwtBuilder builder = Jwts.builder()
+                .subject(user.getName()) // Subject für extractUsername
                 .claim("type", "USER")
                 .claim("userId", user.getId())
                 .claim("role", user.getUserRole().name());

@@ -8,6 +8,7 @@ import com.example.dashboardbackend.dtos.family.CreateFamilyResponse;
 import com.example.dashboardbackend.dtos.family.FamilyResponse;
 import com.example.dashboardbackend.dtos.family.UpdateFamilyNameRequest;
 import com.example.dashboardbackend.dtos.user.UserProfileResponse;
+import com.example.dashboardbackend.dtos.user.UserResponse;
 import com.example.dashboardbackend.dtos.user.UserSelectPageResponse;
 import com.example.dashboardbackend.exceptions.FamilyAlreadyExistsException;
 import com.example.dashboardbackend.exceptions.FamilyNotFoundException;
@@ -62,12 +63,16 @@ public class FamilyService {
 
         // Determine permissions based on user role
         PermissionResponse permissions = getPermissionsForUser(authentication);
+        
+        // Get current user data
+        UserResponse currentUser = getCurrentUser(authentication);
 
         return new DashboardResponse(
                 dashboard.getId(),
                 dashboard.getFamily().getId(),
                 widgetResponseList,
-                permissions
+                permissions,
+                currentUser
         );
     }
 
@@ -101,6 +106,24 @@ public class FamilyService {
         System.out.println("DEBUG: No authentication or wrong principal type");
         // Default to read-only if no authentication
         return new PermissionResponse(false, false, false, true);
+    }
+
+    private UserResponse getCurrentUser(Authentication authentication) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserPrincipal userPrincipal) {
+            User user = userPrincipal.getUser();
+            return new UserResponse(
+                    user.getId(),
+                    user.getName(),
+                    user.getUserRole(),
+                    user.getFamily() != null ? user.getFamily().getId() : null,
+                    user.getAvatar(),
+                    user.getAvatarType(),
+                    user.getColor(),
+                    user.getUserColorMode(),
+                    user.getPin() != null && !user.getPin().isEmpty()
+            );
+        }
+        return null;
     }
 
     public UserSelectPageResponse getUsersForFamily(Long familyId) {
