@@ -1,0 +1,26 @@
+meta {
+  name: Create Event (mit Uhrzeit)
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/widgets/calendar/1
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "title": "Arzttermin",
+    "date": "2026-04-22",
+    "color": "hsl(0, 84%, 60%)",
+    "allDay": false,
+    "startTime": "10:00"
+  }
+}
