@@ -4,6 +4,7 @@ public record PermissionResponse(
         boolean canEditLayout,
         boolean canAddWidgets,
         boolean canDeleteWidgets,
-        boolean canEditWidgetData
+        boolean canEditWidgetData,
+        boolean canManageFamily
 ) {
 }

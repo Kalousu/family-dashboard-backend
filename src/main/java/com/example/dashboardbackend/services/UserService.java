@@ -79,8 +79,12 @@ public class UserService {
         UserResponse admin = getUserByName(authentication.getName());
         User userToPatch = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User you want to update not found"));
 
-        if(admin.familyId().equals(userToPatch.getFamily().getId())) {
-            throw new UnauthorizedException("The User you want to update does not exist in your family");
+        // SYSADMIN can change any user's role
+        if (admin.role() != com.example.dashboardbackend.models.enums.UserRole.SYSTEM_ADMIN) {
+            // For non-SYSADMIN users, check if they are in the same family
+            if (!admin.familyId().equals(userToPatch.getFamily().getId())) {
+                throw new UnauthorizedException("The User you want to update does not exist in your family");
+            }
         }
 
         userToPatch.setUserRole(request.userRole());

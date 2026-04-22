@@ -97,15 +97,16 @@ public class FamilyService {
             
             return new PermissionResponse(
                     isAdmin, // canEditLayout
-                    isAdmin, // canAddWidgets  
+                    isAdmin, // canAddWidgets
                     isAdmin, // canDeleteWidgets
-                    true     // canEditWidgetData - both roles can edit widget content
+                    true,    // canEditWidgetData - all users can edit widget content
+                    isAdmin  // canManageFamily - only FAMILY_ADMIN can manage family
             );
         }
         
         System.out.println("DEBUG: No authentication or wrong principal type");
         // Default to read-only if no authentication
-        return new PermissionResponse(false, false, false, true);
+        return new PermissionResponse(false, false, false, true, false);
     }
 
     private UserResponse getCurrentUser(Authentication authentication) {
