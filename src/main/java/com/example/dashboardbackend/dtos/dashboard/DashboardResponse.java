@@ -6,6 +6,6 @@ public record DashboardResponse(
         Long id,
         Long familyId,
         List<WidgetResponse> widgets,
-        PermissionResponse permissionResponse
+        PermissionResponse permissions
 ) {
 }

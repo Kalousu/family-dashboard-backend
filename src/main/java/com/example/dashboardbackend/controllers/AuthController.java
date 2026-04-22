@@ -25,9 +25,10 @@ public class AuthController {
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AuthResponse> register(
             @RequestPart("data") RegisterRequest request,
-            @RequestPart(value = "avatar", required = false) MultipartFile avatar
+            @RequestPart(value = "avatar", required = false) MultipartFile avatar,
+            HttpServletResponse response
     ) {
-        return new ResponseEntity<>(authenticationService.register(request, avatar), HttpStatus.CREATED);
+        return new ResponseEntity<>(authenticationService.register(request, avatar, response), HttpStatus.CREATED);
     }
 
     @PostMapping("/authenticate")

@@ -33,34 +33,67 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+        System.out.println("DEBUG JWT Filter: Processing request to " + request.getRequestURI());
+        
         String tokenFromCookie = jwtUtils.extractFromCookie(request, "auth_token");
         String authorizationHeader = request.getHeader("Authorization");
+        
+        System.out.println("DEBUG JWT Filter: Token from cookie: " + (tokenFromCookie != null ? "PRESENT" : "NULL"));
+        System.out.println("DEBUG JWT Filter: Authorization header: " + authorizationHeader);
+        
         final String jwtToken;
         final String username;
 
         if (tokenFromCookie != null) {
             jwtToken = tokenFromCookie;
+            System.out.println("DEBUG JWT Filter: Using token from cookie");
         } else if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwtToken = authorizationHeader.substring(7);
+            System.out.println("DEBUG JWT Filter: Using token from Authorization header");
         } else {
+            System.out.println("DEBUG JWT Filter: No token found, skipping authentication");
             filterChain.doFilter(request, response);
             return;
         }
 
-        username = jwtUtils.extractUsername(jwtToken);
+        try {
+            username = jwtUtils.extractUsername(jwtToken);
+            System.out.println("DEBUG JWT Filter: Extracted username: " + username);
+        } catch (Exception e) {
+            System.out.println("DEBUG JWT Filter: Failed to extract username: " + e.getMessage());
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            System.out.println("DEBUG JWT Filter: Loading user details for: " + username);
+            try {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                System.out.println("DEBUG JWT Filter: User details loaded successfully");
 
-            if (jwtUtils.isTokenValid(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                if (jwtUtils.isTokenValid(jwtToken, userDetails)) {
+                    System.out.println("DEBUG JWT Filter: Token is valid, setting authentication");
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    
+                    // Debug log to check what type of principal we have
+                    System.out.println("DEBUG JWT Filter: Principal type: " + userDetails.getClass().getSimpleName());
+                    System.out.println("DEBUG JWT Filter: Principal: " + userDetails);
+                } else {
+                    System.out.println("DEBUG JWT Filter: Token is invalid");
+                }
+            } catch (Exception e) {
+                System.out.println("DEBUG JWT Filter: Failed to load user details: " + e.getMessage());
             }
+        } else if (username == null) {
+            System.out.println("DEBUG JWT Filter: Username is null");
+        } else {
+            System.out.println("DEBUG JWT Filter: Authentication already exists");
         }
 
         filterChain.doFilter(request, response);
