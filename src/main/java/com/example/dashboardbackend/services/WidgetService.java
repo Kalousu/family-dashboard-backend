@@ -26,11 +26,13 @@ public class WidgetService {
     private final DashboardRepository dashboardRepository;
     private final WidgetItemRepository widgetItemRepository;
     private final PictureService pictureService;
+    private final CalendarEventService calendarEventService;
 
     public Object getWidgetData(Long widgetId, String type, WidgetConfig config) {
         return switch (type) {
             case "weather" -> getWeatherData(config);
             case "picture" -> getPictureData(widgetId);
+            case "calendar" -> getCalendarData(widgetId);
             default -> null;
         };
     }
@@ -45,6 +47,14 @@ public class WidgetService {
     private Object getPictureData(Long widgetId) {
         try {
             return pictureService.getPicture(widgetId);
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    private Object getCalendarData(Long widgetId) {
+        try {
+            return calendarEventService.getEvents(widgetId);
         } catch (RuntimeException e) {
             return null;
         }
