@@ -27,12 +27,14 @@ public class WidgetService {
     private final WidgetItemRepository widgetItemRepository;
     private final PictureService pictureService;
     private final CalendarEventService calendarEventService;
+    private final TimetableService timetableService;
 
     public Object getWidgetData(Long widgetId, String type, WidgetConfig config) {
         return switch (type) {
             case "weather" -> getWeatherData(config);
             case "picture" -> getPictureData(widgetId);
             case "calendar" -> getCalendarData(widgetId);
+            case "timetable" -> getTimetableData(widgetId);
             default -> null;
         };
     }
@@ -55,6 +57,14 @@ public class WidgetService {
     private Object getCalendarData(Long widgetId) {
         try {
             return calendarEventService.getEvents(widgetId);
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    private Object getTimetableData(Long widgetId) {
+        try {
+            return timetableService.getTimetable(widgetId);
         } catch (RuntimeException e) {
             return null;
         }
