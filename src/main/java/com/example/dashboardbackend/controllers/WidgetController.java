@@ -5,6 +5,7 @@ import com.example.dashboardbackend.dtos.widgets.UpdateWidgetPositionRequest;
 import com.example.dashboardbackend.dtos.widgets.WidgetListResponse;
 import com.example.dashboardbackend.dtos.widgets.CreateWidgetRequest;
 import com.example.dashboardbackend.services.WidgetService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class WidgetController {
 
     @PostMapping
     public ResponseEntity<Object> createWidget(
-            @RequestBody CreateWidgetRequest createWidgetRequest
+            @Valid @RequestBody CreateWidgetRequest createWidgetRequest
     ) {
         widgetService.createWidget(createWidgetRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -49,7 +50,7 @@ public class WidgetController {
     @PatchMapping("/{widgetId}/config")
     public ResponseEntity<Object> updateWidgetConfig(
             @PathVariable Long widgetId,
-            @RequestBody UpdateWidgetConfigRequest updateWidgetConfigRequest
+            @Valid @RequestBody UpdateWidgetConfigRequest updateWidgetConfigRequest
     ){
         widgetService.updateWidgetConfig(widgetId, updateWidgetConfigRequest);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -58,7 +59,7 @@ public class WidgetController {
     @PatchMapping("/{widgetId}/position")
     public ResponseEntity<Object> updateWidgetPosition(
             @PathVariable Long widgetId,
-            @RequestBody UpdateWidgetPositionRequest updateWidgetPositionRequest
+            @Valid @RequestBody UpdateWidgetPositionRequest updateWidgetPositionRequest
     ){
         widgetService.updateWidgetPosition(widgetId, updateWidgetPositionRequest);
         return new ResponseEntity<>(HttpStatus.OK);

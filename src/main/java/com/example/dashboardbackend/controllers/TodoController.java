@@ -2,8 +2,8 @@ package com.example.dashboardbackend.controllers;
 
 import com.example.dashboardbackend.dtos.todo.*;
 import com.example.dashboardbackend.services.TodoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class TodoController {
     @PostMapping("/{widgetId}")
     public ResponseEntity<TodoItemResponse> createTodo(
         @PathVariable Long widgetId,
-        @RequestBody TodoCreateRequest request
+        @Valid @RequestBody TodoCreateRequest request
     ) {
         return new ResponseEntity<>(todoService.createTodo(widgetId, request), HttpStatus.CREATED);
     }
@@ -34,14 +34,14 @@ public class TodoController {
     @PatchMapping("/{id}/text")
     public ResponseEntity<TodoItemResponse> updateText(
         @PathVariable Long id,
-        @RequestBody TodoUpdateTextRequest request
+        @Valid @RequestBody TodoUpdateTextRequest request
     ) {
         return new ResponseEntity<>(todoService.updateText(id, request), HttpStatus.OK);
     }
 
     @PatchMapping("/positions")
     public ResponseEntity<Void> updatePositions(
-        @RequestBody List<TodoUpdatePositionRequest> requests
+        @Valid @RequestBody List<TodoUpdatePositionRequest> requests
     ) {
         todoService.updatePositions(requests);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

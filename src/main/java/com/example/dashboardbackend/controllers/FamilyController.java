@@ -7,6 +7,7 @@ import com.example.dashboardbackend.dtos.family.FamilyResponse;
 import com.example.dashboardbackend.dtos.family.UpdateFamilyNameRequest;
 import com.example.dashboardbackend.dtos.user.UserSelectPageResponse;
 import com.example.dashboardbackend.services.FamilyService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class FamilyController {
     @PatchMapping("/{familyId}/name")
     public ResponseEntity<FamilyResponse> updateFamilyName(
             @PathVariable Long familyId,
-            @RequestBody UpdateFamilyNameRequest updateFamilyNameRequest
+            @Valid @RequestBody UpdateFamilyNameRequest updateFamilyNameRequest
     ) {
         familyService.updateFamilyName(familyId, updateFamilyNameRequest);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -57,7 +58,7 @@ public class FamilyController {
 
     @PostMapping
     public ResponseEntity<CreateFamilyResponse> createFamily(
-            @RequestBody CreateFamilyRequest createFamilyRequest
+            @Valid @RequestBody CreateFamilyRequest createFamilyRequest
     ) {
         CreateFamilyResponse response = familyService.createFamily(createFamilyRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
