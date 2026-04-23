@@ -14,6 +14,7 @@ import com.example.dashboardbackend.repositories.DashboardRepository;
 import com.example.dashboardbackend.repositories.WidgetItemRepository;
 import com.example.dashboardbackend.repositories.TodoRepository;
 import com.example.dashboardbackend.repositories.CalendarEventRepository;
+import com.example.dashboardbackend.repositories.PictureRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class WidgetService {
     private final WidgetItemRepository widgetItemRepository;
     private final TodoRepository todoRepository;
     private final CalendarEventRepository calendarEventRepository;
+    private final PictureRepository pictureRepository;
     private final PictureService pictureService;
     private final CalendarEventService calendarEventService;
     private final TimetableService timetableService;
@@ -109,6 +111,14 @@ public class WidgetService {
             todoRepository.deleteByWidgetItem_Id(widgetId);
         } else if ("calendar".equals(widgetToDelete.getType())) {
             calendarEventRepository.deleteByWidgetItem_Id(widgetId);
+        } else if ("picture".equals(widgetToDelete.getType())) {
+            // Use PictureService to also delete the file from Cloudflare R2
+            try {
+                pictureService.deletePicture(widgetId);
+            } catch (RuntimeException e) {
+                // If picture doesn't exist, just continue with widget deletion
+                System.out.println("No picture found for widget " + widgetId + ", continuing with widget deletion");
+            }
         }
 
         widgetItemRepository.delete(widgetToDelete);

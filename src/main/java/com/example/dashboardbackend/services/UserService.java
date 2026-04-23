@@ -1,21 +1,41 @@
 package com.example.dashboardbackend.services;
 
 import com.example.dashboardbackend.dtos.user.ChangeUserRoleRequest;
+import com.example.dashboardbackend.dtos.user.UpdateUserProfileRequest;
+import com.example.dashboardbackend.dtos.user.SetUserPinRequest;
 import com.example.dashboardbackend.dtos.user.UserResponse;
 import com.example.dashboardbackend.exceptions.UnauthorizedException;
 import com.example.dashboardbackend.models.User;
+import com.example.dashboardbackend.models.enums.UserAvatarType;
 import com.example.dashboardbackend.repositories.UserRepository;
+import com.example.dashboardbackend.security.jwt.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final S3Client s3Client;
+    private final JwtUtils jwtUtils;
+
+    @Value("${cloudflare.r2.bucket}")
+    private String bucket;
+
+    @Value("${cloudflare.r2.public-url}")
+    private String publicUrl;
 
     public List<UserResponse> getUsers() {
         return userRepository.findAll().stream().map(user ->
@@ -89,5 +109,104 @@ public class UserService {
 
         userToPatch.setUserRole(request.userRole());
         userRepository.save(userToPatch);
+    }
+
+    public String updateUserProfile(Long id, UpdateUserProfileRequest request, Authentication authentication) {
+        User currentUser = userRepository.findByName(authentication.getName())
+            .orElseThrow(() -> new UsernameNotFoundException("Current user not found"));
+        User userToUpdate = userRepository.findById(id)
+            .orElseThrow(() -> new UsernameNotFoundException("User to update not found"));
+
+        // Users can only update their own profile, unless they are SYSADMIN
+        if (!currentUser.getId().equals(userToUpdate.getId()) && 
+            currentUser.getUserRole() != com.example.dashboardbackend.models.enums.UserRole.SYSTEM_ADMIN) {
+            throw new UnauthorizedException("You can only update your own profile");
+        }
+
+        // Check if name is being changed
+        boolean nameChanged = !userToUpdate.getName().equals(request.name());
+
+        userToUpdate.setName(request.name());
+        userToUpdate.setColor(request.color());
+        userToUpdate.setAvatar(request.avatar());
+        userToUpdate.setAvatarType(request.avatarType());
+        
+        userRepository.save(userToUpdate);
+
+        // Generate new JWT token if name was changed and it's the current user
+        if (nameChanged && currentUser.getId().equals(userToUpdate.getId())) {
+            return jwtUtils.generateUserToken(userToUpdate);
+        }
+        
+        return null;
+    }
+
+    public void updateUserProfileWithAvatar(Long id, String name, String color, MultipartFile avatar, Authentication authentication) {
+        User currentUser = userRepository.findByName(authentication.getName())
+            .orElseThrow(() -> new UsernameNotFoundException("Current user not found"));
+        User userToUpdate = userRepository.findById(id)
+            .orElseThrow(() -> new UsernameNotFoundException("User to update not found"));
+
+        // Users can only update their own profile, unless they are SYSADMIN
+        if (!currentUser.getId().equals(userToUpdate.getId()) && 
+            currentUser.getUserRole() != com.example.dashboardbackend.models.enums.UserRole.SYSTEM_ADMIN) {
+            throw new UnauthorizedException("You can only update your own profile");
+        }
+
+        // Upload avatar to Cloudflare R2
+        String avatarUrl = uploadUserAvatar(userToUpdate.getId(), avatar);
+
+        userToUpdate.setName(name);
+        userToUpdate.setColor(color);
+        userToUpdate.setAvatar(avatarUrl);
+        userToUpdate.setAvatarType(UserAvatarType.URL);
+        
+        userRepository.save(userToUpdate);
+    }
+
+    private String uploadUserAvatar(Long userId, MultipartFile file) {
+        String fileExtension = getFileExtension(file.getOriginalFilename());
+        String key = "users/" + userId + "/avatar/" + UUID.randomUUID() + fileExtension;
+
+        try {
+            s3Client.putObject(
+                PutObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .contentType(file.getContentType())
+                    .build(),
+                RequestBody.fromBytes(file.getBytes())
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Avatar upload failed", e);
+        }
+
+        return publicUrl.endsWith("/") ? publicUrl + key : publicUrl + "/" + key;
+    }
+
+    private String getFileExtension(String filename) {
+        if (filename == null || !filename.contains(".")) {
+            return ".jpg";
+        }
+        return filename.substring(filename.lastIndexOf("."));
+    }
+
+    public void setUserPin(Long id, SetUserPinRequest request, Authentication authentication) {
+        User currentUser = userRepository.findByName(authentication.getName())
+            .orElseThrow(() -> new UsernameNotFoundException("Current user not found"));
+        User userToUpdate = userRepository.findById(id)
+            .orElseThrow(() -> new UsernameNotFoundException("User to update not found"));
+
+        // Users can only update their own PIN, unless they are SYSADMIN
+        if (!currentUser.getId().equals(userToUpdate.getId()) && 
+            currentUser.getUserRole() != com.example.dashboardbackend.models.enums.UserRole.SYSTEM_ADMIN) {
+            throw new UnauthorizedException("You can only update your own PIN");
+        }
+
+        // Encode the PIN before saving
+        String encodedPin = passwordEncoder.encode(request.pin());
+        userToUpdate.setPin(encodedPin);
+        
+        userRepository.save(userToUpdate);
     }
 }

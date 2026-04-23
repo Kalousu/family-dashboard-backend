@@ -57,7 +57,8 @@ public class PictureService {
     PictureItem newItem = new PictureItem();
     newItem.setWidgetItem(widgetItemRepository.findById(widgetId)
                                               .orElseThrow(() -> new RuntimeException("Widget " + widgetId + " nicht gefunden")));
-    newItem.setImageUrl(publicUrl + "/" + key);
+    String imageUrl = publicUrl.endsWith("/") ? publicUrl + key : publicUrl + "/" + key;
+    newItem.setImageUrl(imageUrl);
 
     PictureItem saved = pictureRepository.save(newItem);
     return new PictureResponse(saved.getId(), widgetId, saved.getImageUrl());
@@ -76,6 +77,7 @@ public class PictureService {
   }
 
   private String extractKey(String imageUrl) {
-    return imageUrl.replace(publicUrl + "/", "");
+    String urlToRemove = publicUrl.endsWith("/") ? publicUrl : publicUrl + "/";
+    return imageUrl.replace(urlToRemove, "");
   }
 }
