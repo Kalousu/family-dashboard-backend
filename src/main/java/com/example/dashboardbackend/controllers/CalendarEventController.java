@@ -2,10 +2,9 @@ package com.example.dashboardbackend.controllers;
 
 import com.example.dashboardbackend.dtos.calendar.*;
 import com.example.dashboardbackend.services.CalendarEventService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.*;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class CalendarEventController {
   @PostMapping("/{widgetId}")
   public ResponseEntity<CalendarEventResponse> createEvent(
       @PathVariable Long widgetId,
-      @RequestBody CreateCalendarEventRequest request
+      @Valid @RequestBody CreateCalendarEventRequest request
   ) {
     return new ResponseEntity<>(calendarEventService.createEvent(widgetId, request), HttpStatus.CREATED);
   }
@@ -32,7 +31,7 @@ public class CalendarEventController {
   @PutMapping("/{eventId}")
   public ResponseEntity<CalendarEventResponse> updateEvent(
       @PathVariable Long eventId,
-      @RequestBody UpdateCalendarEventRequest request
+      @Valid @RequestBody UpdateCalendarEventRequest request
   ) {
     return new ResponseEntity<>(calendarEventService.updateEvent(eventId, request), HttpStatus.OK);
   }

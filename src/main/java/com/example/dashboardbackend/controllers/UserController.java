@@ -5,6 +5,7 @@ import com.example.dashboardbackend.dtos.user.UpdateUserProfileRequest;
 import com.example.dashboardbackend.dtos.user.SetUserPinRequest;
 import com.example.dashboardbackend.dtos.user.UserResponse;
 import com.example.dashboardbackend.services.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class UserController {
     @PatchMapping("/{userId}/role")
     public ResponseEntity<Object> changeUserRole(
             @PathVariable Long userId,
-            @RequestBody ChangeUserRoleRequest changeUserRoleRequest,
+            @Valid @RequestBody ChangeUserRoleRequest changeUserRoleRequest,
             Authentication authentication
     ) {
         userService.changeUserRole(userId, changeUserRoleRequest, authentication);
@@ -54,7 +55,7 @@ public class UserController {
     @PatchMapping("/{userId}/profile")
     public ResponseEntity<Object> updateUserProfile(
             @PathVariable Long userId,
-            @RequestBody UpdateUserProfileRequest updateUserProfileRequest,
+            @Valid @RequestBody UpdateUserProfileRequest updateUserProfileRequest,
             Authentication authentication,
             HttpServletResponse response
     ) {
@@ -88,7 +89,7 @@ public class UserController {
     @PatchMapping("/{userId}/pin")
     public ResponseEntity<Object> setUserPin(
             @PathVariable Long userId,
-            @RequestBody SetUserPinRequest setUserPinRequest,
+            @Valid @RequestBody SetUserPinRequest setUserPinRequest,
             Authentication authentication
     ) {
         userService.setUserPin(userId, setUserPinRequest, authentication);
