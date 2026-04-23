@@ -37,7 +37,7 @@ public class DataSeeder {
                 User sysUser = new User();
                 sysUser.setAvatar("https://pub-3450ee438ead45c7bddcf1803d1fc37f.r2.dev/images/06cdc993-f91b-41c4-83d0-977ce9dc1304-dekter.jpeg");
                 sysUser.setName("Admin");
-                sysUser.setPassword(passwordEncoder.encode("333"));
+                sysUser.setPassword(passwordEncoder.encode("max_stinkt!"));
                 sysUser.setUserRole(UserRole.SYSTEM_ADMIN);
                 sysUser.setAvatarType(UserAvatarType.URL);
 

@@ -66,6 +66,10 @@ public class AuthenticationService {
         List<User> existingUsers = userRepository.findByFamilyId(request.familyId());
         boolean isFirstUser = existingUsers.isEmpty();
         
+        System.out.println("DEBUG: Family ID: " + request.familyId());
+        System.out.println("DEBUG: Existing users count: " + existingUsers.size());
+        System.out.println("DEBUG: Is first user: " + isFirstUser);
+        
         var user = new User();
 
         user.setName(request.name());
@@ -73,6 +77,7 @@ public class AuthenticationService {
         user.setPin(request.pin() != null ? passwordEncoder.encode(request.pin()) : null);
         // First user becomes FAMILY_ADMIN, others are USER
         UserRole assignedRole = isFirstUser ? UserRole.FAMILY_ADMIN : UserRole.USER;
+        System.out.println("DEBUG: Assigned role: " + assignedRole);
         user.setUserRole(assignedRole);
         user.setFamily(family);
         user.setAvatar(avatarURI);

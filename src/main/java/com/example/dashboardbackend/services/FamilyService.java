@@ -156,7 +156,17 @@ public class FamilyService {
         }
     }
 
-    public void deleteFamilyById(Long familyId) {
+    public void deleteFamilyById(Long familyId, Authentication authentication) {
+        // Check if user is SYSTEM_ADMIN
+        if (authentication == null || !(authentication.getPrincipal() instanceof UserPrincipal userPrincipal)) {
+            throw new RuntimeException("Authentication required");
+        }
+        
+        User user = userPrincipal.getUser();
+        if (user.getUserRole() != UserRole.SYSTEM_ADMIN) {
+            throw new RuntimeException("Only SYSTEM_ADMIN can delete families");
+        }
+        
         Family familyToDelete = familyRepository.findById(familyId)
                 .orElseThrow(() -> new FamilyNotFoundException("Family you want to delete not found"));
 

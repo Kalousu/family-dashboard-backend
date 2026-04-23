@@ -66,9 +66,10 @@ public class FamilyController {
 
     @DeleteMapping("/{familyId}")
     public ResponseEntity<Object> deleteFamily(
-            @PathVariable Long familyId
+            @PathVariable Long familyId,
+            Authentication authentication
     ) {
-        familyService.deleteFamilyById(familyId);
+        familyService.deleteFamilyById(familyId, authentication);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
