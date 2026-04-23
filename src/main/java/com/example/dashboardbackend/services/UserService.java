@@ -102,7 +102,7 @@ public class UserService {
         // SYSADMIN can change any user's role
         if (admin.role() != com.example.dashboardbackend.models.enums.UserRole.SYSTEM_ADMIN) {
             // For non-SYSADMIN users, check if they are in the same family
-            if (!admin.familyId().equals(userToPatch.getFamily().getId())) {
+            if (admin.familyId() == null || !admin.familyId().equals(userToPatch.getFamily().getId())) {
                 throw new UnauthorizedException("The User you want to update does not exist in your family");
             }
         }
@@ -197,9 +197,10 @@ public class UserService {
         User userToUpdate = userRepository.findById(id)
             .orElseThrow(() -> new UsernameNotFoundException("User to update not found"));
 
-        // Users can only update their own PIN, unless they are SYSADMIN
-        if (!currentUser.getId().equals(userToUpdate.getId()) && 
-            currentUser.getUserRole() != com.example.dashboardbackend.models.enums.UserRole.SYSTEM_ADMIN) {
+        // Users can only update their own PIN, unless they are SYSADMIN or FAMILY_ADMIN
+        if (!currentUser.getId().equals(userToUpdate.getId()) &&
+            currentUser.getUserRole() != com.example.dashboardbackend.models.enums.UserRole.SYSTEM_ADMIN &&
+            currentUser.getUserRole() != com.example.dashboardbackend.models.enums.UserRole.FAMILY_ADMIN) {
             throw new UnauthorizedException("You can only update your own PIN");
         }
 
